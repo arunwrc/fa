@@ -14,10 +14,20 @@ include_once($path_to_root . "/inventory/includes/db/items_locations_db.inc");
 include_once($path_to_root . "/gl/includes/gl_db.inc");
 include_once($path_to_root . "/includes/ui/items_cart.inc");
 
-function inventory_all($from = null) {
+function inventory_all($category_id,$from = null) {
+
 	if ($from == null) $from = 0;
 
-	$sql = "SELECT * FROM ".TB_PREF."stock_master LIMIT ".$from.", ".RESULTS_PER_PAGE;
+	//$sql = "SELECT * FROM ".TB_PREF."stock_master LIMIT ".$from.", ".RESULTS_PER_PAGE;
+	$sql = "SELECT * FROM ".TB_PREF."stock_master";
+
+	if ($category_id > 0) {
+		$sql.= " WHERE category_id = ".$category_id; 
+	}
+	
+	$sql.=" LIMIT ".$from.", ".RESULTS_PER_PAGE;
+
+
 	
 	$query = db_query($sql, "error");
     
@@ -29,6 +39,17 @@ function inventory_all($from = null) {
 
 	api_success_response(json_encode($info));
 }
+
+/*************/
+function inventory_by_catid($category_id)
+{
+
+	$item = get_items_bycatid($category_id);
+	if(!$item) $item = array();
+	api_success_response(json_encode($item));
+
+}
+/*************/
 
 function inventory_get($id)
 {

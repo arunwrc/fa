@@ -74,6 +74,24 @@ $rest->get('/inventory/', function() use ($rest){
 		inventory_all($from);
 	}
 });
+
+//***********
+// Get Items
+$rest->get('/inventory/:category_id/', function($category_id) use ($rest){
+	
+	global $req;
+	include_once (API_ROOT . "/inventory.inc");
+	$page	= $req->get("page");
+
+	if ($page == null) {
+		inventory_by_catid($category_id);
+	} else {
+		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
+		$from = --$page * RESULTS_PER_PAGE;
+		inventory_by_catid($category_id,$from);
+	}
+});
+//***********
 // Get Specific Item by Stock Id
 $rest->get('/inventory/:id', function($id) use ($rest) {
 
