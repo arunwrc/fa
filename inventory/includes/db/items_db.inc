@@ -120,6 +120,18 @@ function get_items()
 	return db_query($sql,"items could not be retreived");
 }
 
+/*
+****************
+*/
+function get_items_bycatid($category_id)
+{
+	$sql = "SELECT * FROM ".TB_PREF."stock_master WHERE category_id=".$category_id;
+	return db_query($sql,"items could not be retreived");
+}
+/* 
+***************
+*/
+
 function item_in_foreign_codes($stock_id)
 {
 	$sqls=  array(
