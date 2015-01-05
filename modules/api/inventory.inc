@@ -15,7 +15,7 @@ include_once($path_to_root . "/gl/includes/gl_db.inc");
 include_once($path_to_root . "/includes/ui/items_cart.inc");
 
 function inventory_all($category_id,$from = null) {
-
+	
 	if ($from == null) $from = 0;
 
 	//$sql = "SELECT * FROM ".TB_PREF."stock_master LIMIT ".$from.", ".RESULTS_PER_PAGE;
@@ -39,6 +39,37 @@ function inventory_all($category_id,$from = null) {
 
 	api_success_response(json_encode($info));
 }
+/**
+***GET INVENTORY BY STOCK ID
+****/
+function inventory_by_stock_id($stock_id,$from = null) {
+	echo "arun"; exit;
+	if ($from == null) $from = 0;
+
+	//$sql = "SELECT * FROM ".TB_PREF."stock_master LIMIT ".$from.", ".RESULTS_PER_PAGE;
+	$sql = "SELECT * FROM ".TB_PREF."stock_master";
+
+	if ($stock_id > 0) {
+		$sql.= " WHERE stock_id = ".$stock_id; 
+	}
+	
+	$sql.=" LIMIT ".$from.", ".RESULTS_PER_PAGE;
+
+
+	
+	$query = db_query($sql, "error");
+    
+	$info = array();
+
+	while($data = db_fetch($query, "error")) {
+		$info[] = array('stock_id' => $data['stock_id'], 'category_id' => $data['category_id'], 'tax_type_id' => $data['tax_type_id'], 'description' => $data['description'], 'long_description' => $data['long_description'], 'units' => $data['units'], 'mb_flag' => $data['mb_flag'], 'sales_account' => $data['sales_account'], 'cogs_account' => $data['cogs_account'], 'inventory_account' => $data['inventory_account'], 'sales_account' => $data['sales_account'], 'adjustment_account' => $data['adjustment_account'], 'actual_cost' => $data['actual_cost'], 'material_cost' => $data['material_cost'], 'labour_cost' => $data['labour_cost'], 'overhead_cost' => $data['overhead_cost'], 'inactive' => $data['inactive'],'no_sale' => $data['no_sale']);
+	}
+
+	api_success_response(json_encode($info));
+}
+/**
+***GET INVENTORY BY STOCK ID
+****/
 
 /*************/
 function inventory_by_catid($category_id)
