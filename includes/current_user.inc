@@ -32,6 +32,7 @@ class current_user
 	var $old_db;
 	var $logged;
 	var $ui_mode = 0;
+	var $loc_code = 0;
 	
 	var $prefs;
 	var $cur_con; // current db connection (can be different from $company for superuser)
@@ -80,6 +81,7 @@ class current_user
 		if ($Auth_Result)
 		{
 			$myrow = get_user_by_login($loginname);
+
 			$this->old_db = isset($myrow["full_access"]);
 			if (! @$myrow["inactive"]) {
 				if ($this->old_db) { 
@@ -122,6 +124,8 @@ class current_user
         	    $this->prefs = new user_prefs($myrow);
         	    $this->user = @$myrow["id"];
                 $this->email = @$myrow["email"];
+		$this->loc_code = $myrow["loc_code"];
+
 		    	update_user_visitdate($this->username);
 		    	$this->logged = true;
 				$this->last_act = time();

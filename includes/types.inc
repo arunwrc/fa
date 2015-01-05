@@ -226,6 +226,10 @@ define('PTT_CASH', 2);
 define('PTT_DAYS', 3);
 define('PTT_FOLLOWING', 4);
 
+
+//secutity roles
+define('SYSTEM_ADMINISTRATOR',2);
+
 include_once($path_to_root . '/includes/sysnames.inc');
 
 //---------------------------------------------------------------------------------
