@@ -31,8 +31,15 @@ function display_order_header(&$order)
 	start_outer_table(TABLESTYLE, "width=70%");
 
 	table_section(1);
-	
-	locations_list_row(_("From Location:"), 'FromStockLocation', null);
+
+	if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
+		locations_list_row(_("From Location:"), 'FromStockLocation', null);	
+	}
+	else{
+		$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
+		label_row(_("From Location: "), $loc_text , null);
+		hidden('FromStockLocation',$_SESSION['wa_current_user']->loc_code);
+	}
 	locations_list_row(_("To Location:"), 'ToStockLocation', null);
 
 	table_section(2, "33%");

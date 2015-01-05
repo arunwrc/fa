@@ -105,6 +105,15 @@ function get_item($stock_id)
 	return db_fetch($result);
 }
 
+function get_items_by_category($category_id)
+{
+	$sql = "SELECT ".TB_PREF."stock_master.*,".TB_PREF."item_tax_types.name AS tax_type_name
+		FROM ".TB_PREF."stock_master,".TB_PREF."item_tax_types
+		WHERE ".TB_PREF."item_tax_types.id=".TB_PREF."stock_master.tax_type_id
+		AND category_id=".db_escape($category_id);
+	return db_query($sql,"an item could not be retreived");
+}
+
 function get_items()
 {
 	$sql = "SELECT * FROM ".TB_PREF."stock_master";

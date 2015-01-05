@@ -64,7 +64,7 @@ if (($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM') && check_csrf_token())
     	{
     		update_user_prefs($selected_id,
     			get_post(array('user_id', 'real_name', 'phone', 'email', 'role_id', 'language',
-					'print_profile', 'rep_popup' => 0, 'pos')));
+					'print_profile', 'rep_popup' => 0, 'pos','loc_code')));
 
     		if ($_POST['password'] != "")
     			update_user_password($selected_id, $_POST['user_id'], md5($_POST['password']));
@@ -75,7 +75,7 @@ if (($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM') && check_csrf_token())
     	{
     		add_user($_POST['user_id'], $_POST['real_name'], md5($_POST['password']),
 				$_POST['phone'], $_POST['email'], $_POST['role_id'], $_POST['language'],
-				$_POST['print_profile'], check_value('rep_popup'), $_POST['pos']);
+				$_POST['print_profile'], check_value('rep_popup'), $_POST['pos'],$_POST['loc_code']);
 			$id = db_insert_id();
 			// use current user display preferences as start point for new user
 			$prefs = $_SESSION['wa_current_user']->prefs->get_all();
@@ -181,6 +181,7 @@ if ($selected_id != -1)
 		$_POST['print_profile'] = $myrow["print_profile"];
 		$_POST['rep_popup'] = $myrow["rep_popup"];
 		$_POST['pos'] = $myrow["pos"];
+		$_POST['loc_code'] = $myrow["loc_code"];
 	}
 	hidden('selected_id', $selected_id);
 	hidden('user_id');
@@ -215,6 +216,8 @@ security_roles_list_row(_("Access Level:"), 'role_id', null);
 languages_list_row(_("Language:"), 'language', null);
 
 pos_list_row(_("User's POS"). ':', 'pos', null);
+
+locations_list_row(_("Stock Location:"), 'loc_code', null, false, true);
 
 print_profiles_list_row(_("Printing profile"). ':', 'print_profile', null,
 	_('Browser printing support'));
