@@ -36,9 +36,10 @@ function display_order_header(&$order)
 		locations_list_row(_("From Location:"), 'FromStockLocation', null);	
 	}
 	else{
+		$_POST['FromStockLocation']=$_SESSION['wa_current_user']->loc_code;
 		$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
 		label_row(_("From Location: "), $loc_text , null);
-		hidden('FromStockLocation',$_SESSION['wa_current_user']->loc_code);
+		hidden('FromStockLocation');
 	}
 	locations_list_row(_("To Location:"), 'ToStockLocation', null);
 

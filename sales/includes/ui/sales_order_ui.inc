@@ -576,9 +576,10 @@ function display_delivery_details(&$order)
 			locations_list_row(_("From Location:"), 'Location', null);	
 		}
 		else{
+			$_POST['Location'] = $_SESSION['wa_current_user']->loc_code;
 			$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
 			label_row(_("From Location: "), $loc_text , null);
-			hidden('Location',$_SESSION['wa_current_user']->loc_code);
+			hidden('Location');
 		}
 		//------------------------------------------------------------------------------
 

@@ -187,7 +187,22 @@ function display_po_header(&$order)
 		date_row(_("Due Date:"), 'due_date', '', false, 0, 0, 0, null, true);
 
   	text_row(_("Supplier's Reference:"), 'supp_ref', null, 16, 15);
-	locations_list_row(_("Receive Into:"), 'StkLocation', null, false, true); 
+
+	
+	
+	//-----------------------------------------------------------------------------
+	//locations_list_row(_("Receive Into:"), 'StkLocation', null, false, true); 
+	if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
+		locations_list_row(_("Receive Into:"), 'StkLocation', null);	
+	}
+	else{
+		$_POST['StkLocation'] = $_SESSION['wa_current_user']->loc_code;
+		$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
+		label_row(_("Receive Into: "), $loc_text , null);
+		hidden('StkLocation');
+		//locations_list_row(_("Receive Into:"), 'StkLocation', null);
+	}
+	//------------------------------------------------------------------------------
 
 	table_section(3);
 
