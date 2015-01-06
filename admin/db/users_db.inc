@@ -11,15 +11,14 @@
 ***********************************************************************/
 
 function add_user($user_id, $real_name, $password, $phone, $email, $role_id, 
-	$language, $profile, $rep_popup, $pos,$loc_code)
+	$language, $profile, $rep_popup, $pos)
 {
 	$sql = "INSERT INTO ".TB_PREF."users (user_id, real_name, password"
-		.", phone, email, role_id, language, pos, print_profile, rep_popup,loc_code)
+		.", phone, email, role_id, language, pos, print_profile, rep_popup)
 		VALUES (".db_escape($user_id).", 
 		".db_escape($real_name).", ".db_escape($password) .",".db_escape($phone)
 		.",".db_escape($email).", ".db_escape($role_id).", ".db_escape($language)
 		.", ".db_escape($pos).",".db_escape($profile).",".db_escape($rep_popup)
-		.",".db_escape($loc_code)
 		." )";
 
 	return db_query($sql, "could not add user for $user_id");
@@ -38,7 +37,7 @@ function update_user_password($id, $user_id, $password)
 //-----------------------------------------------------------------------------------------------
 
 function update_user($id, $user_id, $real_name, $phone, $email, $role_id, 
-	$language, $profile, $rep_popup, $pos,$loc_code)
+	$language, $profile, $rep_popup, $pos)
 {
 	$sql = "UPDATE ".TB_PREF."users SET real_name=".db_escape($real_name).
 	", phone=".db_escape($phone).",
@@ -48,7 +47,6 @@ function update_user($id, $user_id, $real_name, $phone, $email, $role_id,
 		print_profile=".db_escape($profile).",
 		rep_popup=".db_escape($rep_popup).",
 		pos=".db_escape($pos).",
-		loc_code=".db_escape($loc_code).",
 		user_id = " . db_escape($user_id)
 		. " WHERE id=" . db_escape($id);
 	return db_query($sql, "could not update user for $user_id");
