@@ -124,9 +124,12 @@ function get_customer_details_to_order(&$order, $customer_id, $branch_id)
 	elseif ($order->trans_type == ST_SALESORDER)
 		$order->due_date = add_days($order->document_date, $SysPrefs->default_delivery_required_by());
 	if($order->payment_terms['cash_sale']) {
-		$order->set_location($order->pos["pos_location"], $order->pos["location_name"]);
-	} else
-		$order->set_location($myrow["default_location"], $myrow["location_name"]);
+		//$order->set_location($order->pos["pos_location"], $order->pos["location_name"]);
+		
+	} else{
+		
+		//$order->set_location($myrow["default_location"], $myrow["location_name"]);
+	}
 
 	return $ret_error;
 }
@@ -296,6 +299,7 @@ function display_order_header(&$order, $editable, $date_text)
 
 				$customer_error = get_customer_details_to_order($order, $_POST['customer_id'], $_POST['branch_id']);
 				$_POST['Location'] = $order->Location;
+				$_POST['salesman'] = $order->salesman;
 				$_POST['deliver_to'] = $order->deliver_to;
 				$_POST['delivery_address'] = $order->delivery_address;
 				$_POST['phone'] = $order->phone;
@@ -572,6 +576,7 @@ function display_delivery_details(&$order)
 		
 		//-----------------------------------------------------------------------------
 		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
+
 		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
 			locations_list_row(_("From Location:"), 'Location', null);
 			sales_persons_list_row( _("Sales Person:"), 'salesman', null);	
@@ -615,18 +620,28 @@ function display_delivery_details(&$order)
 		start_outer_table(TABLESTYLE2, "width=90%");
 		table_section(1);
 
+
 		//-------------------------------------------------------------------------------
 		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
-		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
-			locations_list_row(_("From Location:"), 'Location', null);
-			//sales_persons_list_row( _("Sales Person:"), 'salesman', 1);
-			warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true, true, false);	
+		$location = get_location_row($order->Location);
+		
+		$order->set_location($order->Location, $location["location_name"]);
+		$_POST['Location'] = $order->Location;
+		
+		if($order->Location == ''){
+			locations_list_row(_("From Location:"), 'Location', null,false,true);
+			$Ajax->activate('salesman');
+			warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true);	
+
 		}
 		else{
-			$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
+			$loc_text = get_stock_location_text($order->Location);
 			label_row(_("From Location: "), $loc_text , null);
-			hidden('Location',$_SESSION['wa_current_user']->loc_code);
+			hidden('Location',$order->Location);
+			warehouse_salesman_list_row(_("Sales Person:"),$order->Location, 'salesman', null, false, true);	
 		}
+
+		
 		//-------------------------------------------------------------------------------
 
 		if (list_updated('Location'))

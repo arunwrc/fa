@@ -243,6 +243,17 @@ function get_location(&$cart)
 	}
 	return null;
 }
+
+
+//get location details with its code
+function get_location_row($loc_code)
+{
+	$sql = "SELECT * FROM ".TB_PREF."locations WHERE loc_code = ".db_escape($loc_code);
+	//echo $sql;exit;	
+	$result = db_query($sql,"an item reorder could not be retreived");
+
+	return db_fetch($result);
+}
 //--------------------------------------------------------------------------------------------------
 // Generic read debtor transaction into cart
 //

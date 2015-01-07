@@ -99,12 +99,18 @@ if (isset($_GET['NewDelivery']) && is_numeric($_GET['NewDelivery'])) {
 page($_SESSION['page_title'], false, false, "", $js);
 //-----------------------------------------------------------------------------
 
+$_SESSION['warehouse'] = 'KDV';
+if(isset($_SESSION['warehouse'])){
+	$_SESSION['Items']->Location = $_SESSION['warehouse'];
+}
+
 if (list_updated('branch_id')) {
 	// when branch is selected via external editor also customer can change
 	$br = get_branch(get_post('branch_id'));
 	$_POST['customer_id'] = $br['debtor_no'];
 	$Ajax->activate('customer_id');
 }
+
 
 
 
@@ -278,6 +284,7 @@ function copy_to_cart()
 		$cart->ship_via = $_POST['ship_via'];
 	}
 	$cart->Location = $_POST['Location'];
+	$cart->salesman = $_POST['salesman'];
 	$cart->freight_cost = input_num('freight_cost');
 	if (isset($_POST['email']))
 		$cart->email =$_POST['email'];
@@ -311,6 +318,7 @@ function copy_from_cart()
 	$_POST['delivery_address'] = $cart->delivery_address;
 	$_POST['phone'] = $cart->phone;
 	$_POST['Location'] = $cart->Location;
+	$_POST['salesman'] = $cart->salesman;
 	$_POST['ship_via'] = $cart->ship_via;
 
 	$_POST['customer_id'] = $cart->customer_id;
@@ -447,6 +455,9 @@ if (isset($_POST['update'])) {
 }
 
 if (isset($_POST['ProcessOrder']) && can_process()) {
+
+
+	
 
 	$modified = ($_SESSION['Items']->trans_no != 0);
 	$so_type = $_SESSION['Items']->so_type;
@@ -733,10 +744,12 @@ if ($customer_error == "") {
 
 		submit_center_first('ProcessOrder', $porder,
 		    _('Check entered data and save document'), 'default');
+
 		submit_center_last('CancelOrder', $cancelorder,
 	   		_('Cancels document entry or removes sales order when editing an old document'), true);
 		submit_js_confirm('CancelOrder', _('You are about to void this Document.\nDo you want to continue?'));
 	} else {
+		
 		submit_center_first('ProcessOrder', $corder,
 		    _('Validate changes and update document'), 'default');
 		submit_center_last('CancelOrder', $cancelorder,

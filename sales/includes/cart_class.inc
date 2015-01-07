@@ -53,6 +53,7 @@ class cart
 	var $reference;
 	var $Comments;
 	var $Location;
+	
 	var $location_name;
 	var $order_no; 		// the original order number
 
@@ -354,6 +355,12 @@ class cart
 	{
 		$this->Location = $id;
 		$this->location_name = $name;
+	}
+
+	function set_salesman($id, $name)
+	{
+		$this->salesman = $id;
+		$this->salesman_name = $name;
 	}
 
 	function set_delivery($shipper, $destination, $address, $freight_cost=null)
