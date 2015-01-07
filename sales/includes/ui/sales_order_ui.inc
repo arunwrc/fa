@@ -569,8 +569,21 @@ function display_delivery_details(&$order)
 		$Ajax->activate('items_table');
 		display_heading(_('Cash payment'));
 		start_table(TABLESTYLE2, "width=60%");
+		
+		//-----------------------------------------------------------------------------
+		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
+		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
+			locations_list_row(_("From Location:"), 'Location', null);
+			sales_persons_list_row( _("Sales Person:"), 'salesman', null);	
+		}
+		else{
+			$_POST['Location'] = $_SESSION['wa_current_user']->loc_code;
+			$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
+			label_row(_("From Location: "), $loc_text , null);
+			hidden('Location');
+		}
+		//------------------------------------------------------------------------------
 
-		locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
  		if (list_updated('Location'))
  			$Ajax->activate('items_table');
 		label_row(_("Cash account:"), $order->pos['bank_account_name']);
@@ -602,7 +615,20 @@ function display_delivery_details(&$order)
 		start_outer_table(TABLESTYLE2, "width=90%");
 		table_section(1);
 
-		locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
+		//-------------------------------------------------------------------------------
+		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
+		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
+			locations_list_row(_("From Location:"), 'Location', null);
+			//sales_persons_list_row( _("Sales Person:"), 'salesman', 1);
+			warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true, true, false);	
+		}
+		else{
+			$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
+			label_row(_("From Location: "), $loc_text , null);
+			hidden('Location',$_SESSION['wa_current_user']->loc_code);
+		}
+		//-------------------------------------------------------------------------------
+
 		if (list_updated('Location'))
 			$Ajax->activate('items_table');
 
