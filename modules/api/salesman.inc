@@ -64,7 +64,7 @@ function salesman_add()
 	if(!isset($info['provision2'])){
 		api_error(412, 'Provision 2 is required [provision2]');
 	}
-	if(!isset($info['warehouse_code'])){
+	if(!isset($info['loc_code'])){
 		api_error(412, 'Warehouse Code is required [warehouse_code]');
 	}
 	if(!isset($info['inactive'])){
@@ -79,10 +79,10 @@ function salesman_add()
 		$info['salesman_phone'],
 		$info['salesman_fax'],
 		$info['salesman_email'],
-		$info['provision'],
-		$info['break_pt'],
-		$info['provision2'],
-		$info['warehouse_code'],
+		0,
+		0,
+		0,
+		$info['loc_code'],
 		$info['inactive']
 		);
 
