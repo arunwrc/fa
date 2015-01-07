@@ -623,24 +623,11 @@ function display_delivery_details(&$order)
 
 		//-------------------------------------------------------------------------------
 		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
-		$location = get_location_row($order->Location);
-		
-		$order->set_location($order->Location, $location["location_name"]);
-		$_POST['Location'] = $order->Location;
-		
-		if($order->Location == ''){
-			locations_list_row(_("From Location:"), 'Location', null,false,true);
-			$Ajax->activate('salesman');
-			warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true);	
 
-		}
-		else{
-			$loc_text = get_stock_location_text($order->Location);
-			label_row(_("From Location: "), $loc_text , null);
-			hidden('Location',$order->Location);
-			warehouse_salesman_list_row(_("Sales Person:"),$order->Location, 'salesman', null, false, true);	
-		}
-
+		
+		locations_list_row(_("From Location:"), 'Location', null,false,true);
+		$Ajax->activate('salesman');
+		warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true);
 		
 		//-------------------------------------------------------------------------------
 

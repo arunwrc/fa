@@ -99,10 +99,7 @@ if (isset($_GET['NewDelivery']) && is_numeric($_GET['NewDelivery'])) {
 page($_SESSION['page_title'], false, false, "", $js);
 //-----------------------------------------------------------------------------
 
-$_SESSION['warehouse'] = 'KDV';
-if(isset($_SESSION['warehouse'])){
-	$_SESSION['Items']->Location = $_SESSION['warehouse'];
-}
+
 
 if (list_updated('branch_id')) {
 	// when branch is selected via external editor also customer can change
