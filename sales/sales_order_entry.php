@@ -106,6 +106,8 @@ if (list_updated('branch_id')) {
 	$Ajax->activate('customer_id');
 }
 
+
+
 if (isset($_GET['AddedID'])) {
 	$order_no = $_GET['AddedID'];
 	display_notification_centered(sprintf( _("Order # %d has been entered."),$order_no));

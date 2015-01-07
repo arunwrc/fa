@@ -573,7 +573,8 @@ function display_delivery_details(&$order)
 		//-----------------------------------------------------------------------------
 		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
 		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
-			locations_list_row(_("From Location:"), 'Location', null);	
+			locations_list_row(_("From Location:"), 'Location', null);
+			sales_persons_list_row( _("Sales Person:"), 'salesman', null);	
 		}
 		else{
 			$_POST['Location'] = $_SESSION['wa_current_user']->loc_code;
@@ -617,7 +618,9 @@ function display_delivery_details(&$order)
 		//-------------------------------------------------------------------------------
 		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
 		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
-			locations_list_row(_("From Location:"), 'Location', null);	
+			locations_list_row(_("From Location:"), 'Location', null);
+			//sales_persons_list_row( _("Sales Person:"), 'salesman', 1);
+			warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true, true, false);	
 		}
 		else{
 			$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
