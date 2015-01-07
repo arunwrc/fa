@@ -97,24 +97,58 @@ $rest->get('/inventorybystockid/:stock_id/', function($stock_id) use ($rest){
 /***
 ** GET INVENTORY ITEMS BY LOCATION STARTS----------------------
 ****/
-$rest->get('/inventorybylocode/:loc_code/', function($loc_code) use ($rest){
-
-	global $req;
+$rest->get('/inventorybylocode/:loc_code', function($loc_code) use ($rest){
+/***********/
+global $req;
 	include_once (API_ROOT . "/inventory.inc");
 
 	$page	= $req->get("page");
 
 	if ($page == null) {
-		inventory_by_loc_code($loc_code);
+		get_inventory_by_loc_code($loc_code);
 	} else {
 		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
 		$from = --$page * RESULTS_PER_PAGE;
-		inventory_by_loc_code(loc_code,$from);
+		get_inventory_by_loc_code($loc_code,$from);
 	}
+	
 });
 /****/
 /***
-** GET INVENTORY ITEMS BY STOCK ID ENDS------------------------
+** GET INVENTORY ITEMS BY LOCATION  ENDS------------------------
+****/
+
+
+/****/
+/***
+** GET INVENTORY ITEMS BY LOCATION CATEGORY ID STARTS----------------------
+****/
+
+//////////////////////////////////////////
+/*$rest->get('/sales/:trans_no/:trans_type', function($trans_no, $trans_type) use ($rest){
+	include_once (API_ROOT . "/sales.inc");
+	sales_get($trans_no, $trans_type);
+});*/
+//////////////////////////////////////////
+$rest->get('/inventorybylocodecatid/:loc_code/:category_id', function($loc_code,$category_id) use ($rest){
+/***********/
+global $req;
+	include_once (API_ROOT . "/inventory.inc");
+
+	$page	= $req->get("page");
+
+	if ($page == null) {
+		get_inventory_by_loc_code_catid($loc_code,category_id);
+	} else {
+		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
+		$from = --$page * RESULTS_PER_PAGE;
+		get_inventory_by_loc_code_catid($loc_code,$category_id,$from);
+	}
+	
+});
+/****/
+/***
+** GET INVENTORY ITEMS BY LOCATION CATEGORY ID ENDS------------------------
 ****/
 
 //***********

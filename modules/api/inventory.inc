@@ -8,13 +8,14 @@ Free software under GNU GPL
 $path_to_root = "../..";
 
 include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+include_once($path_to_root . "/inventory/includes/db/items_db.inc");
 include_once($path_to_root . "/inventory/includes/db/items_codes_db.inc");
 include_once($path_to_root . "/inventory/includes/db/movement_types_db.inc");
 include_once($path_to_root . "/inventory/includes/db/items_locations_db.inc");
 include_once($path_to_root . "/gl/includes/gl_db.inc");
 include_once($path_to_root . "/includes/ui/items_cart.inc");
 
-function inventory_all($category_id,$from = null) {
+function inventory_all($category_id,$loc_code,$from = null) {
 
 	if ($from == null) $from = 0;
 
@@ -22,7 +23,7 @@ function inventory_all($category_id,$from = null) {
 	$sql = "SELECT * FROM ".TB_PREF."stock_master";
 
 	if ($category_id > 0) {
-		$sql.= " WHERE category_id = ".$category_id; 
+		$sql.= " WHERE category_id = ".$category_id ; 
 	}
 	
 	$sql.=" LIMIT ".$from.", ".RESULTS_PER_PAGE;
@@ -71,7 +72,7 @@ function inventory_by_stock_id($stock_id,$from = null) {
 /**
 ***GET INVENTORY BY LOCATION
 ****/
-function inventory_by_loc_code($loc_code,$from = null) {
+/*function inventory_by_loc_code($loc_code,$from = null) {
 	
 	if ($from == null) $from = 0;
 
@@ -95,11 +96,43 @@ function inventory_by_loc_code($loc_code,$from = null) {
 	}
 
 	api_success_response(json_encode($info));
-}
+}*/
 /**
 ***GET INVENTORY BY LOCATION
 ****/
 /*************/
+
+/********GET ITEMS BY LOCATION STARTS********/
+function get_inventory_by_loc_code($loc_code,$from = null)
+{
+	if ($from == null) $from = 0;
+	$result = inventory_by_loc_code($loc_code);
+	$item = array();
+	while ($row=db_fetch($result)) {
+		$item[]=$row;
+	}
+	
+	api_success_response(json_encode($item));
+
+}
+
+/********GET ITEMS BY LOCATION ENDS*********/
+
+/********GET ITEMS BY LOCATION CATEGORY ID STARTS********/
+function get_inventory_by_loc_code_catid($loc_code,$category_id,$from = null)
+{
+	if ($from == null) $from = 0;
+	$result = inventory_by_loc_code_catid($loc_code,$category_id);
+	$item = array();
+	while ($row=db_fetch($result)) {
+		$item[]=$row;
+	}
+	
+	api_success_response(json_encode($item));
+
+}
+
+/********GET ITEMS BY LOCATION CATEGORY IDENDS*********/
 
 function inventory_get($id)
 {
