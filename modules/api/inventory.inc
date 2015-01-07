@@ -15,7 +15,7 @@ include_once($path_to_root . "/gl/includes/gl_db.inc");
 include_once($path_to_root . "/includes/ui/items_cart.inc");
 
 function inventory_all($category_id,$from = null) {
-	
+
 	if ($from == null) $from = 0;
 
 	//$sql = "SELECT * FROM ".TB_PREF."stock_master LIMIT ".$from.", ".RESULTS_PER_PAGE;
@@ -43,16 +43,12 @@ function inventory_all($category_id,$from = null) {
 ***GET INVENTORY BY STOCK ID
 ****/
 function inventory_by_stock_id($stock_id,$from = null) {
-	echo "arun"; exit;
+	
 	if ($from == null) $from = 0;
 
 	//$sql = "SELECT * FROM ".TB_PREF."stock_master LIMIT ".$from.", ".RESULTS_PER_PAGE;
 	$sql = "SELECT * FROM ".TB_PREF."stock_master";
-
-	if ($stock_id > 0) {
-		$sql.= " WHERE stock_id = ".$stock_id; 
-	}
-	
+	$sql.= " WHERE stock_id = ".$stock_id; 
 	$sql.=" LIMIT ".$from.", ".RESULTS_PER_PAGE;
 
 
@@ -72,14 +68,14 @@ function inventory_by_stock_id($stock_id,$from = null) {
 ****/
 
 /*************/
-function inventory_by_catid($category_id)
+/*function inventory_by_catid($category_id)
 {
 
 	$item = get_items_bycatid($category_id);
 	if(!$item) $item = array();
 	api_success_response(json_encode($item));
 
-}
+}*/
 /*************/
 
 function inventory_get($id)

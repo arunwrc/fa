@@ -224,3 +224,33 @@
 [29-Dec-2014 12:27:53 Europe/Paris] 0:admin:packages.inc:532: array_merge(): Argument #1 is not an array
 [29-Dec-2014 12:28:06 Europe/Paris] 0:admin:packages.inc:532: array_merge(): Argument #1 is not an array
 [29-Dec-2014 12:28:06 Europe/Paris] 0:admin:packages.inc:532: array_merge(): Argument #1 is not an array
+[05-Jan-2015 10:18:15 Europe/Paris] 0:admin:connect_db.inc:27: mysql_connect(): 
+[05-Jan-2015 10:18:15 Europe/Paris] 0:admin:connect_db.inc:28: mysql_select_db() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:18:15 Europe/Paris] 0:admin:connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:18:15 Europe/Paris] 0:admin:connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:18:15 Europe/Paris] 0:admin:connect_db.inc:154: mysql_errno() expects parameter 1 to be resource, boolean given
+[05-Jan-2015 10:18:15 Europe/Paris] 0:admin:connect_db.inc:114: mysql_num_rows() expects parameter 1 to be resource, null given
+[05-Jan-2015 10:18:22 Europe/Paris] 0::connect_db.inc:27: mysql_connect(): 
+[05-Jan-2015 10:18:22 Europe/Paris] 0::connect_db.inc:28: mysql_select_db() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:18:22 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:18:22 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:18:22 Europe/Paris] 0::connect_db.inc:154: mysql_errno() expects parameter 1 to be resource, boolean given
+[05-Jan-2015 10:18:22 Europe/Paris] 0::connect_db.inc:114: mysql_num_rows() expects parameter 1 to be resource, null given
+[05-Jan-2015 10:21:04 Europe/Paris] 0::connect_db.inc:27: mysql_connect(): 
+[05-Jan-2015 10:21:04 Europe/Paris] 0::connect_db.inc:28: mysql_select_db() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:21:04 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:21:04 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:21:04 Europe/Paris] 0::connect_db.inc:154: mysql_errno() expects parameter 1 to be resource, boolean given
+[05-Jan-2015 10:21:04 Europe/Paris] 0::connect_db.inc:114: mysql_num_rows() expects parameter 1 to be resource, null given
+[05-Jan-2015 10:22:09 Europe/Paris] 0::connect_db.inc:27: mysql_connect(): 
+[05-Jan-2015 10:22:09 Europe/Paris] 0::connect_db.inc:28: mysql_select_db() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:22:09 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:22:09 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:22:09 Europe/Paris] 0::connect_db.inc:154: mysql_errno() expects parameter 1 to be resource, boolean given
+[05-Jan-2015 10:22:09 Europe/Paris] 0::connect_db.inc:114: mysql_num_rows() expects parameter 1 to be resource, null given
+[05-Jan-2015 10:22:21 Europe/Paris] 0::connect_db.inc:27: mysql_connect(): 
+[05-Jan-2015 10:22:21 Europe/Paris] 0::connect_db.inc:28: mysql_select_db() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:22:21 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:22:21 Europe/Paris] 0::connect_db.inc:60: mysql_query() expects parameter 2 to be resource, boolean given
+[05-Jan-2015 10:22:21 Europe/Paris] 0::connect_db.inc:154: mysql_errno() expects parameter 1 to be resource, boolean given
+[05-Jan-2015 10:22:21 Europe/Paris] 0::connect_db.inc:114: mysql_num_rows() expects parameter 1 to be resource, null given

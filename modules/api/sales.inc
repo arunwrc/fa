@@ -78,6 +78,7 @@ include_once($path_to_root . "/admin/db/attachments_db.inc");
 }*/
 
 function sales_all($trans_type, $from = null) {
+	//echo "sales add function"; 
 	if ($from == null) $from = 0;
 
 	$info = array();
@@ -246,6 +247,7 @@ function sales_get($trans_no, $trans_type) {
 }
 
 function sales_add() {
+
 	$app	= \Slim\Slim::getInstance('SASYS');
 	$req	= $app->request();
 	$info	= $req->post();

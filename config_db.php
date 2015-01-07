@@ -25,8 +25,8 @@ $db_connections = array (
     'name' => 'Acube Innovations',
     'host' => 'localhost',
     'dbuser' => 'root',
-    'dbpassword' => 'mysql@local',
-    'dbname' => 'ccd',
+    'dbpassword' => '',
+    'dbname' => 'fa',
     'tbpref' => '0_',
   ),
 );
