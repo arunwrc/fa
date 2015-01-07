@@ -68,14 +68,37 @@ function inventory_by_stock_id($stock_id,$from = null) {
 ****/
 
 /*************/
-/*function inventory_by_catid($category_id)
-{
+/**
+***GET INVENTORY BY LOCATION
+****/
+function inventory_by_loc_code($loc_code,$from = null) {
+	
+	if ($from == null) $from = 0;
 
-	$item = get_items_bycatid($category_id);
-	if(!$item) $item = array();
-	api_success_response(json_encode($item));
 
-}*/
+
+	$sql="SELECT SMT.description as Product_name,SMT.units as UOM,SMO.loc_code as Warehouse_name, SMO.price as Product_price,sum(SMO.qty) as Product_Quantity,SMO.standard_cost as Standard_cost FROM ".TB_PREF."stock_moves AS SMO LEFT JOIN ".TB_PREF."stock_master AS SMT ON SMT.stock_id=SMO.stock_id WHERE SMO.loc_code=".$loc_code." GROUP BY SMT.stock_id";
+
+
+	$query = db_query($sql, "error");
+    
+	$info = array();
+
+	while($data = db_fetch($query, "error")) {
+		$info[] = array(
+			'description' => $data['description'], 
+			'units' => $data['units'], 
+			'loc_code' => $data['loc_code'], 
+			'price' => $data['price'], 
+			'qty' => $data['qty'], 
+			'standard_cost' => $data['standard_cost'];
+	}
+
+	api_success_response(json_encode($info));
+}
+/**
+***GET INVENTORY BY LOCATION
+****/
 /*************/
 
 function inventory_get($id)
