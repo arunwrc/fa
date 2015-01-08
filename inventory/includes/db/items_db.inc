@@ -118,9 +118,10 @@ function inventory_by_loc_code($loc_code)
 /****************INVENTORY BY LOCATION CODE AND CATEGORY ID STARTS************************/
 function inventory_by_loc_code_catid($loc_code,$category_id)
 {
+	
 	$sql="SELECT SMT.description as Product_name,SMT.units as UOM,SMT.category_id as Category_id,SMO.loc_code as Warehouse_name, SMO.price as Product_price,sum(SMO.qty) as Product_Quantity,SMO.standard_cost as Standard_cost FROM ".TB_PREF."stock_moves AS SMO LEFT JOIN ".TB_PREF."stock_master AS SMT ON SMT.stock_id=SMO.stock_id 
-	WHERE SMO.loc_code=".db_escape($loc_code)." 
-	AND SMT.category_id=".db_escape($category_id)." 
+	WHERE SMO.loc_code='DEF'
+	AND SMT.category_id=".$category_id." 
 	GROUP BY SMT.stock_id";
 
 	return db_query($sql,"an item could not be retreived");

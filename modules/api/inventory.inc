@@ -119,10 +119,11 @@ function get_inventory_by_loc_code($loc_code,$from = null)
 /********GET ITEMS BY LOCATION ENDS*********/
 
 /********GET ITEMS BY LOCATION CATEGORY ID STARTS********/
-function get_inventory_by_loc_code_catid($loc_code,$category_id,$from = null)
+function get_inventory_by_loc_code_catid($loc_code,$category_id)
 {
 	if ($from == null) $from = 0;
-	$result = inventory_by_loc_code_catid($loc_code,$category_id);
+	$result = inventory_by_loc_code_catid($loc_code,$category_id='3');
+	//$result = inventory_by_loc_code_catid($loc_code,$category_id='6');
 	$item = array();
 	while ($row=db_fetch($result)) {
 		$item[]=$row;
