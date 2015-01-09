@@ -262,7 +262,7 @@ function salesinvoice_add() {
 
 	$cart->reference	= $info['ref'];
 	$cart->Comments		= $info['comments'];
-	$cart->document_date	= $info['order_date'];
+	$cart->document_date	= Today() ;//$info['order_date'];
 	if (isset($info['payment']) && ($cart->payment != $info['payment'])) {
 		$cart->payment		= $info['payment'];
 		$cart->payment_terms	= get_payment_terms($info['payment']);
@@ -277,7 +277,7 @@ function salesinvoice_add() {
 			$cart->deliver_to	= '';
 		}
 	} else {
-		$cart->due_date			= $info['delivery_date'];
+		$cart->due_date			= Today() ;//$info['delivery_date'];
 		$cart->cust_ref			= $info['cust_ref'];
 		$cart->deliver_to		= $info['deliver_to'];
 		$cart->delivery_address		= $info['delivery_address'];
@@ -322,17 +322,17 @@ function salesinvoice_add() {
 	
 	
 
-	/*if ($result == -1) {
+	if ($result == -1) {
     		return array("passed" => false, "message" => _("The entered reference is already in use."));
     		api_error(500, 'Could Not Save to Database');
     		return;
-  	}*/
-	//$feeback_response = sprintf(_("Invoice # %d has been entered."), key($cart->trans_no));
+  	}
+	$feeback_response = sprintf(_("Invoice # %d has been entered."), key($cart->trans_no));
 
-	//api_success_response(_("Ok"));
-	//$app->error();
+	api_success_response(_("Ok"));
+	$app->error();
 	
-	api_success_response(json_encode($cart));
+	//api_success_response(json_encode($cart));
 
 }
 
