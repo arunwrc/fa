@@ -9,6 +9,7 @@ $path_to_root = "../..";
 
 include_once($path_to_root . "/sales/includes/db/customers_db.inc");
 include_once($path_to_root . "/includes/db/crm_contacts_db.inc");
+include_once($path_to_root . "/includes/db/references_db.inc");
 
 function customer_all($from = null) {
 	if ($from == null) $from = 0;
@@ -384,8 +385,13 @@ function customer_n_branch_get($id,$trans_type){
 
 	$ret = db_fetch($result);
 
-	
-	if(!$ret) $ret = array();
+	$ref = get_next_reference($trans_type);
+
+	if(!$ret){
+		$ret = array();
+	} else{
+		$ret['next_ref'] = $ref;
+	}
 
 	api_success_response(json_encode($ret));
 
