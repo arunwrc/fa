@@ -96,6 +96,8 @@ if (isset($_GET['NewDelivery']) && is_numeric($_GET['NewDelivery'])) {
 	create_cart(ST_SALESQUOTE, $_GET['NewQuoteToSalesOrder']);
 }
 
+
+
 page($_SESSION['page_title'], false, false, "", $js);
 //-----------------------------------------------------------------------------
 
@@ -453,8 +455,7 @@ if (isset($_POST['update'])) {
 
 if (isset($_POST['ProcessOrder']) && can_process()) {
 
-
-	
+//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;	
 
 	$modified = ($_SESSION['Items']->trans_no != 0);
 	$so_type = $_SESSION['Items']->so_type;
@@ -670,6 +671,7 @@ function create_cart($type, $trans_no)
 	copy_from_cart();
 }
 
+
 //--------------------------------------------------------------------------------
 
 if (isset($_POST['CancelOrder']))
@@ -739,8 +741,10 @@ if ($customer_error == "") {
 
 	if ($_SESSION['Items']->trans_no == 0) {
 
+		/*submit_center_first('ProcessOrder', $porder,
+		    _('Check entered data and save document'), 'default');*/
 		submit_center_first('ProcessOrder', $porder,
-		    _('Check entered data and save document'), 'default');
+		    _('Check entered data and save document'));
 
 		submit_center_last('CancelOrder', $cancelorder,
 	   		_('Cancels document entry or removes sales order when editing an old document'), true);
