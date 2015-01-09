@@ -575,4 +575,72 @@ function can_process($info, $cart) {
 	return array('passed' => true);
 }
 
+//***************************TRACK SALES BY LOCATION START ***************************************//
+function sales_by_location($trans_type, $location, $from = null) {
+	//echo "sales add function"; 
+	if ($from == null) $from = 0;
+
+	$info = array();
+	$sale_index = 0;
+
+	if ($trans_type == ST_SALESORDER || $trans_type == ST_SALESQUOTE || $trans_type == ST_CUSTDELIVERY) {
+		$sql = "SELECT order_no, trans_type FROM ".TB_PREF."sales_orders WHERE trans_type=".db_escape($trans_type)." AND from_stk_loc=".db_escape($location)." LIMIT ".$from.", ".RESULTS_PER_PAGE;
+		$query = db_query($sql, "error");
+
+		while($sale = db_fetch($query, "error")) {
+			try {
+				$cart																		= null;
+				$cart																		= new Cart($sale['trans_type'], $sale['order_no']);
+				$info[$sale_index]['ref']								= $cart->reference;
+				$info[$sale_index]['comments']					= $cart->Comments;
+				$info[$sale_index]['order_date']				= $cart->document_date;
+				$info[$sale_index]['payment']						= $cart->payment;
+				$info[$sale_index]['payment_terms']			= $cart->payment_terms;
+				$info[$sale_index]['due_date']					= $cart->due_date;
+				$info[$sale_index]['phone']							= $cart->phone;
+				$info[$sale_index]['cust_ref']					= $cart->cust_ref;
+				$info[$sale_index]['delivery_address']	= $cart->delivery_address;
+				$info[$sale_index]['ship_via']					= $cart->ship_via;
+				$info[$sale_index]['deliver_to']				= $cart->deliver_to;
+				$info[$sale_index]['delivery_date']			= $cart->due_date;
+				$info[$sale_index]['location']					= $cart->Location;
+				$info[$sale_index]['freight_cost']			= $cart->freight_cost;
+				$info[$sale_index]['email']							= $cart->email;
+				$info[$sale_index]['customer_id']				= $cart->customer_id;
+				$info[$sale_index]['branch_id']					= $cart->Branch;
+				$info[$sale_index]['sales_type']				= $cart->sales_type;
+				$info[$sale_index]['dimension_id']			= $cart->dimension_id;
+				$info[$sale_index]['dimension2_id']			= $cart->dimension2_id;
+
+			 	$item_index = 0;
+
+				foreach($cart->line_items as $item) {
+					$info[$sale_index]['line_items'][$item_index]['id']						= $item->id;
+					$info[$sale_index]['line_items'][$item_index]['stock_id']			= $item->stock_id;
+					$info[$sale_index]['line_items'][$item_index]['qty']					= $item->quantity;
+					$info[$sale_index]['line_items'][$item_index]['units']				= $item->units;
+					$info[$sale_index]['line_items'][$item_index]['price']				= $item->price;
+					$info[$sale_index]['line_items'][$item_index]['discount']			= $item->discount_percent;
+					$info[$sale_index]['line_items'][$item_index]['description']	= $item->item_description;
+			 		$item_index++;
+				}
+
+				$sub_total					= $cart->get_items_total() + $cart->freight_cost;
+				$display_sub_total	= price_format($sub_total);
+				$display_total			= $cart->get_trans_total();
+
+				$info[$sale_index]['sub_total']			= $sub_total;
+				$info[$sale_index]['display_total']	= $display_total;
+			} catch (Exception $e) {
+				//api_error(404, $e->getMessage());
+			}
+
+			$sale_index++;
+		}
+	}
+
+	api_success_response(json_encode($info));
+}
+//***************************TRACK SALES BY LOCATION ENDS****************************************//
+
 ?>

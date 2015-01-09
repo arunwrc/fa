@@ -130,20 +130,16 @@ global $req;
 	sales_get($trans_no, $trans_type);
 });*/
 //////////////////////////////////////////
-$rest->get('/inventorybylocodecatid/:loc_code/:category_id', function($loc_code,$category_id) use ($rest){
+$rest->get('/inventorybylocodecatid/:loc_code/:category_id', function($loc_code, $category_id) use ($rest){
 /***********/
 global $req;
 	include_once (API_ROOT . "/inventory.inc");
 
 	$page	= $req->get("page");
 
-	if ($page == null) {
-		get_inventory_by_loc_code_catid($loc_code,category_id);
-	} else {
-		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
-		$from = --$page * RESULTS_PER_PAGE;
-		get_inventory_by_loc_code_catid($loc_code,$category_id,$from);
-	}
+	
+		get_inventory_by_loc_code_catid($loc_code, $category_id);
+	
 	
 });
 /****/
@@ -597,6 +593,21 @@ $rest->get('/sales/:trans_type/', function($trans_type) use ($rest){
 		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
 		$from = --$page * RESULTS_PER_PAGE;
 		sales_all($trans_type, $from);
+	}
+});
+// All Sales By Location
+$rest->get('/getsalesbylocation/:trans_type/:location', function($trans_type, $location) use ($rest){
+	global $req;
+	include_once (API_ROOT . "/sales.inc");
+
+	$page	= $req->get("page");
+
+	if ($page == null) {
+		sales_by_location($trans_type, $location);
+	} else {
+		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
+		$from = --$page * RESULTS_PER_PAGE;
+		sales_by_location($trans_type, $location, $from);
 	}
 });
 // ------------------------------- Sales Order Entry -------------------------------
