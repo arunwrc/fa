@@ -19,6 +19,12 @@ include($path_to_root . "/includes/ui.inc");
 
 //-------------------------------------------------------------------------------------------------
 
+if (list_updated('loc_code')) {
+	$Ajax->activate('details');
+	$Ajax->activate('controls');
+}
+
+
 if (isset($_POST['setprefs'])) 
 {
 
@@ -36,17 +42,33 @@ if (isset($_POST['setprefs']))
 	display_notification_centered(_("Forms settings have been updated."));
 }
 
+
+
 start_form();
+start_table(TABLESTYLE_NOBORDER);
+locations_list_row(_(" Select Warehouse"), 'loc_code', null, false, true);
+end_row();
+end_table();
+
+echo "<hr>";
+
+
+
+
+
+div_start('details');
+$loc_code = get_post('loc_code');
+$refs = get_loc_references($loc_code);
 
 start_outer_table(TABLESTYLE2);
 
-$systypes = get_systypes();
+
 table_section(1);
 
 $th = array(_("Form"), _("Next Reference"));
 table_header($th);
 $i = 0;
-while ($type = db_fetch($systypes)) 
+while ($type = db_fetch($refs)) 
 {
 	if ($i++ == ST_CUSTCREDIT)
 	{
@@ -57,8 +79,11 @@ while ($type = db_fetch($systypes))
 }
 
 end_outer_table(1);
+div_end();
 
+div_start('controls');
 submit_center('setprefs', _("Update"), true, '', 'default');
+div_end();
 
 end_form(2);
 

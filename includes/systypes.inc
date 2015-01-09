@@ -80,4 +80,17 @@ function get_systypes()
 	return $result;
 }
 
+function get_loc_references($loc_code)
+{
+
+	$sql = "SELECT sys.*,loc.loc_code,loc.next_reference FROM ".TB_PREF."sys_types sys";
+	$sql .= " LEFT JOIN 0_loc_refs loc ON sys.type_id = loc.trans_type AND loc.loc_code=".db_escape($loc_code);
+	
+	$result = db_query($sql, "could not query systypes table");
+	return $result;
+}
+
+
+
+
 ?>
