@@ -301,6 +301,7 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 
 		$location = 0;
 		$myrow = get_location($cart); // find location from movement
+		
 
 		if($myrow!=null) {
 			$cart->set_location($myrow['loc_code'], $myrow['location_name']);

@@ -80,6 +80,7 @@ function get_customer_details_to_order(&$order, $customer_id, $branch_id)
 
 	$name = $myrow['name'];
 
+
 	if ($myrow['dissallow_invoices'] == 1)
 		$ret_error = _("The selected customer account is currently on hold. Please contact the credit control personnel to discuss.");
 
@@ -130,6 +131,10 @@ function get_customer_details_to_order(&$order, $customer_id, $branch_id)
 		
 		//$order->set_location($myrow["default_location"], $myrow["location_name"]);
 	}
+
+	//location for ccd
+	$location = get_item_location($order->Location);
+	$order->set_location($location["loc_code"], $location["location_name"]);
 
 	return $ret_error;
 }
@@ -252,6 +257,7 @@ function display_order_header(&$order, $editable, $date_text)
 	$customer_error = "";
 	$change_prices = 0;
 
+
 	if (isset($order) && !$editable)
 	{
 		// can't change the customer/branch if items already received on this order
@@ -362,6 +368,8 @@ function display_order_header(&$order, $editable, $date_text)
 		}
 	}
 
+	
+		
 	ref_row(_("Reference").':', 'ref', _('Reference number unique for this document type'), null, '');
 
 	table_section(2);
@@ -567,7 +575,7 @@ function display_delivery_details(&$order)
 	global $Ajax;
 
 	div_start('delivery');	
-
+	
 
 	if ($order->payment_terms['cash_sale']) {	// Direct payment sale
 		$Ajax->activate('items_table');
@@ -576,17 +584,13 @@ function display_delivery_details(&$order)
 		
 		//-----------------------------------------------------------------------------
 		//locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
+		locations_list_row(_("From Location:"), 'Location', null,false,true);
+		
+		
+		$Ajax->activate('salesman');
+		
 
-		if($_SESSION['wa_current_user']->access == SYSTEM_ADMINISTRATOR){
-			locations_list_row(_("From Location:"), 'Location', null);
-			sales_persons_list_row( _("Sales Person:"), 'salesman', null);	
-		}
-		else{
-			$_POST['Location'] = $_SESSION['wa_current_user']->loc_code;
-			$loc_text = get_stock_location_text($_SESSION['wa_current_user']->loc_code);
-			label_row(_("From Location: "), $loc_text , null);
-			hidden('Location');
-		}
+		warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true);
 		//------------------------------------------------------------------------------
 
  		if (list_updated('Location'))
@@ -627,6 +631,7 @@ function display_delivery_details(&$order)
 		
 		locations_list_row(_("From Location:"), 'Location', null,false,true);
 		$Ajax->activate('salesman');
+		
 		warehouse_salesman_list_row(_("Sales Person:"), $_POST['Location'], 'salesman', null, false, true);
 		
 		//-------------------------------------------------------------------------------

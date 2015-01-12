@@ -22,3 +22,6 @@ CREATE TABLE IF NOT EXISTS `0_loc_refs` (
   PRIMARY KEY (`trans_type`,`loc_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+ALTER TABLE `0_debtor_trans`  ADD `loc_code` VARCHAR(5) NOT NULL AFTER `type`;
+

@@ -254,17 +254,22 @@ function copy_from_cart()
 	$_POST['due_date'] = $cart->due_date;
 	$_POST['Comments']= $cart->Comments;
 	$_POST['cart_id'] = $cart->cart_id;
-	$_POST['ref'] = $cart->reference;
+	if($cart->trans_no == 0)
+		$_POST['ref'] = $cart->get_loc_ref($cart->Location);
+	else
+		$_POST['ref'] = $cart->reference;
 	$_POST['payment'] = $cart->payment;
 	$_POST['dimension_id'] = $cart->dimension_id;
 	$_POST['dimension2_id'] = $cart->dimension2_id;
+
+
 }
 
 //-----------------------------------------------------------------------------
 
 function check_data()
 {
-	global $Refs;
+	global $Refs,$LocRefs;
 
 	if (!isset($_POST['InvoiceDate']) || !is_date($_POST['InvoiceDate'])) {
 		display_error(_("The entered invoice date is invalid."));

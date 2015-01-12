@@ -110,6 +110,13 @@ if (list_updated('branch_id')) {
 	$Ajax->activate('customer_id');
 }
 
+if (list_updated('Location')){
+	
+	$next = $_SESSION['Items']->get_loc_ref(get_post('Location'));
+	$_POST['ref'] = $next;
+	$Ajax->activate('ref');
+}
+
 
 
 
@@ -455,7 +462,7 @@ if (isset($_POST['update'])) {
 
 if (isset($_POST['ProcessOrder']) && can_process()) {
 
-//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;	
+	//echo "<pre>";print_r($_SESSION['Items']->reference);echo "</pre>";exit;	
 
 	$modified = ($_SESSION['Items']->trans_no != 0);
 	$so_type = $_SESSION['Items']->so_type;
@@ -635,7 +642,10 @@ function  handle_cancel_order()
 
 function create_cart($type, $trans_no)
 { 
-	global $Refs;
+	global $Refs,$LocRefs;
+	
+
+	//echo "<pre>";print_r($_SESSION['wa_current_user']);echo "</pre>";exit;
 
 	if (!$_SESSION['SysPrefs']->db_ok) // create_cart is called before page() where the check is done
 		return;
@@ -660,14 +670,17 @@ function create_cart($type, $trans_no)
 			$doc->pos = get_sales_point(user_pos());
 		} else
 			$doc->due_date = $doc->document_date;
-		$doc->reference = $Refs->get_next($doc->trans_type);
+		//$doc->reference = $Refs->get_next($doc->trans_type);
+		$doc->reference = $LocRefs->get_next($doc->trans_type,$doc->Location);
 		//$doc->Comments='';
 		foreach($doc->line_items as $line_no => $line) {
 			$doc->line_items[$line_no]->qty_done = 0;
 		}
 		$_SESSION['Items'] = $doc;
-	} else
+	} else{
+	
 		$_SESSION['Items'] = new Cart($type, array($trans_no));
+	}
 	copy_from_cart();
 }
 

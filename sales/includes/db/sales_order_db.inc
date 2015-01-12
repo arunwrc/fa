@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------
 function add_sales_order(&$order)
 {
-	global $loc_notification, $path_to_root, $Refs;
+	global $loc_notification, $path_to_root, $Refs,$LocRefs;
 
 	begin_transaction();
 	hook_db_prewrite($order, $order->trans_type);
@@ -71,7 +71,8 @@ function add_sales_order(&$order)
 			update_parent_line(ST_SALESORDER, $line->src_id, $line->qty_dispatched); // clear all the quote despite all or the part was ordered
 	} /* inserted line items into sales order details */
 	add_audit_trail($order->trans_type, $order_no, $order->document_date);
-	$Refs->save($order->trans_type, $order_no, $order->reference);
+	//$Refs->save($order->trans_type, $order_no, $order->reference);
+	$LocRefs->save($order->trans_type, $order_no, $order->reference,$order->Location);
 
 	hook_db_postwrite($order, $order->trans_type);
 	commit_transaction();

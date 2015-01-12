@@ -91,6 +91,9 @@ class cart
 		$this->dimension_id = 0;
 		$this->dimension2_id = 0;
 		$this->pos = get_sales_point(user_pos());
+		//set location
+		$this->Location = $_SESSION['wa_current_user']->loc_code;
+		
 		$this->read($type, $trans_no, $prep_child);
 		$this->cart_id = uniqid('');
 	}
@@ -121,12 +124,13 @@ class cart
 	//
 	function prepare_child()
 	{
-		global $Refs;
+		global $Refs,$LocRefs;
 
 		$type = get_child_type($this->trans_type);
 
 		$this->trans_type = $type;
-		$this->reference = $Refs->get_next($this->trans_type);
+		//$this->reference = $Refs->get_next($this->trans_type);
+		$this->reference = $LocRefs->get_next($this->trans_type,$this->Location);
 		if ($type == ST_CUSTCREDIT)
 		    $this->src_date = $this->document_date;
 
@@ -191,7 +195,9 @@ class cart
 	//
 	function read($type, $trans_no=0, $prep_child=false) {
 
-		global $SysPrefs, $Refs;
+		global $SysPrefs, $Refs, $LocRefs;
+
+		
 
 		if (!is_array($trans_no)) $trans_no = array($trans_no);
 
@@ -228,7 +234,12 @@ class cart
 				$this->document_date = new_doc_date();
 				if (!is_date_in_fiscalyear($this->document_date))
 					$this->document_date = end_fiscalyear();
-				$this->reference = $Refs->get_next($this->trans_type);
+
+				//location wise reference
+				//$this->reference = $Refs->get_next($this->trans_type);
+				$this->reference = $LocRefs->get_next($this->trans_type,$this->Location);
+
+
 				if ($type != ST_SALESORDER && $type != ST_SALESQUOTE) // Added 2.1 Joe Hunt 2008-11-12
 				{
 					$dim = get_company_pref('use_dimension');
@@ -266,11 +277,12 @@ class cart
 	// $policy - 0 or 1:  writeoff/return for IV, back order/cancel for DN
 	function write($policy=0) { 
 		//begin_transaction(); // prevents partial database changes in case of direct delivery/invoice
-		if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_reference($this->reference, $this->trans_type))
+		//if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_reference($this->reference, $this->trans_type))
+		if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_loc_reference($this->reference, $this->trans_type,$this->Location))
 		{
 			commit_transaction();
 			return -1;
-		}	
+		}
 		if (count($this->src_docs) == 0 && ($this->trans_type == ST_SALESINVOICE || $this->trans_type == ST_CUSTDELIVERY)) {
 			// this is direct document - first add parent
 			$ref = $this->reference;
@@ -409,6 +421,13 @@ class cart
 	{
 		$this->Location = $id;
 		$this->location_name = $name;
+	}
+
+	function get_loc_ref($loc)
+	{
+		global $LocRefs;
+		return $LocRefs->get_next($this->trans_type,$loc);
+		
 	}
 
 	function set_salesman($id, $name)
