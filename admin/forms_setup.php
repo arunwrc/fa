@@ -18,8 +18,11 @@ page(_($help_context = "Forms Setup"));
 include($path_to_root . "/includes/ui.inc");
 
 //-------------------------------------------------------------------------------------------------
-
+$loc_code = get_post('loc_code');
 if (list_updated('loc_code')) {
+
+	//clear_data();
+	$_POST['loc_code'] = $loc_code;
 	$Ajax->activate('details');
 	$Ajax->activate('controls');
 }
@@ -66,11 +69,9 @@ echo "<hr>";
 
 
 
-
-
 div_start('details');
-$loc_code = get_post('loc_code');
-$refs = get_loc_references($loc_code);
+
+$refs = get_loc_references($_POST['loc_code']);
 
 start_outer_table(TABLESTYLE2);
 
@@ -92,15 +93,18 @@ while ($type = db_fetch($refs))
 		$next_reference = 1;
 	else
 		$next_reference = $type["next_reference"];
-	ref_row($systypes_array[$type["type_id"]], 'id' . $type["type_id"], '', $next_reference);
+
+	$_POST['id' . $type["type_id"]] = $next_reference;
+	
+	ref_row($systypes_array[$type["type_id"]], 'id' . $type["type_id"]);
 }
 
 end_outer_table(1);
 div_end();
 
 div_start('controls');
-submit_center('setprefs', _("Update"), true);
-//submit_center('setprefs', _("Update"), true, '', 'default');
+
+submit_center('setprefs', _("Update"), true, '', 'default');
 div_end();
 
 end_form(2);
