@@ -63,6 +63,17 @@ function save_next_reference($type, $reference)
 
 	db_query($sql, "The next transaction ref for $type could not be updated");
 }
+//--------------------------------------------------------------------------------------------------
+//update locatiion wise references
+function save_loc_next_reference($loc_code,$type, $reference)
+{
+
+	$sql = "INSERT INTO ".TB_PREF."loc_refs (trans_type,loc_code,next_reference)";
+	$sql .= " VALUES (".db_escape($type).",".db_escape($loc_code).",".db_escape($reference).")";
+	$sql .= " ON DUPLICATE KEY UPDATE next_reference=VALUES(next_reference)";
+
+	db_query($sql, "The next transaction ref for $type could not be updated");
+}
 
 //--------------------------------------------------------------------------------------------------
 
