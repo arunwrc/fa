@@ -95,7 +95,30 @@ $rest->get('/inventorybystockid/:stock_id/', function($stock_id) use ($rest){
 });
 /****/
 /***
-** GET INVENTORY ITEMS BY LOCATION STARTS----------------------
+** GET INVENTORY ITEMS BY LOCATION LOW STOCK  STARTS----------------------
+****/
+$rest->get('/inventorybylocodelowstock/:loc_code', function($loc_code) use ($rest){
+/***********/
+global $req;
+	include_once (API_ROOT . "/inventory.inc");
+
+	$page	= $req->get("page");
+
+	if ($page == null) {
+		get_inventory_by_loc_code_low_stock($loc_code);
+	} else {
+		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
+		$from = --$page * RESULTS_PER_PAGE;
+		get_inventory_by_loc_code_low_stock($loc_code,$from);
+	}
+	
+});
+/****/
+/***
+** GET INVENTORY ITEMS BY LOCATION LOW STOCK ENDS------------------------
+****/
+
+/** GET INVENTORY ITEMS BY LOCATION STARTS----------------------
 ****/
 $rest->get('/inventorybylocode/:loc_code', function($loc_code) use ($rest){
 /***********/
@@ -115,7 +138,7 @@ global $req;
 });
 /****/
 /***
-** GET INVENTORY ITEMS BY LOCATION  ENDS------------------------
+** GET INVENTORY ITEMS BY LOCATION ENDS------------------------
 ****/
 
 

@@ -102,8 +102,26 @@ function inventory_by_stock_id($stock_id,$from = null) {
 ****/
 /*************/
 
+/********GET ITEMS BY LOCATION LOW STOCK  STARTS********/
+function get_inventory_by_loc_code_low_stock($loc_code,$from = null) ///inventory/includes/db/items_db.inc
+{
+	if ($from == null) $from = 0;
+	$result = inventory_by_loc_code_lowstock($loc_code);
+	$item = array();
+	while ($row=db_fetch_assoc($result)) {
+		$item[]=$row;
+	}
+	
+	api_success_response(json_encode($item));
+
+}
+
+/********GET ITEMS BY LOCATION LOW STOCK ENDS*********/
+
+
+
 /********GET ITEMS BY LOCATION STARTS********/
-function get_inventory_by_loc_code($loc_code,$from = null)
+function get_inventory_by_loc_code($loc_code,$from = null) ///inventory/includes/db/items_db.inc
 {
 	if ($from == null) $from = 0;
 	$result = inventory_by_loc_code($loc_code);
@@ -119,7 +137,7 @@ function get_inventory_by_loc_code($loc_code,$from = null)
 /********GET ITEMS BY LOCATION ENDS*********/
 
 /********GET ITEMS BY LOCATION CATEGORY ID STARTS********/
-function get_inventory_by_loc_code_catid($loc_code, $category_id)
+function get_inventory_by_loc_code_catid($loc_code, $category_id) ///inventory/includes/db/items_db.inc
 {	//exit;
 	//if ($from == null) $from = 0;
 	$result = inventory_by_loc_code_catid($loc_code, $category_id);
