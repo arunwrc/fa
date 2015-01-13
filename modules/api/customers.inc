@@ -381,13 +381,13 @@ function customer_n_branch_get($id,$trans_type){
 
 	$ret = db_fetch($result);
 
-	$ref = get_next_reference($trans_type);
+	/*$ref = get_loc_next_reference($loc_code,$trans_type);
 
 	if(!$ret){
 		$ret = array();
 	} else{
 		$ret['next_ref'] = $ref;
-	}
+	}*/
 
 	api_success_response(json_encode($ret));
 

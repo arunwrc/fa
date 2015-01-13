@@ -647,12 +647,15 @@ function salesinvoice_add() {
     $app    = \Slim\Slim::getInstance('SASYS');
     $req    = $app->request();
     $info    = $req->post();
-    //$info = array(1,2,3);    
+    //$info = array(1,2,3);  
+	
 
     $cart        = null;
     $cart        = new Cart($info['trans_type'], 0);
 
-    $cart->reference    = $info['ref'];
+    $ref = get_loc_next_reference($info['location'],$info['trans_type']);
+	
+    $cart->reference    = $ref;
     $cart->Comments        = $info['comments'];
     $cart->document_date    = Today() ;//$info['order_date'];
     if (isset($info['payment']) && ($cart->payment != $info['payment'])) {
@@ -711,20 +714,27 @@ function salesinvoice_add() {
 
     
     $result = $cart->writeTx(1);
+	
+    if ($result == -1) {
+		api_error(500, 'Could Not Save to Database');
+    }else {	
+		api_success_response(json_encode(key($cart->trans_no)));
+    }
     
     
 
-    if ($result == -1) {
+   /* if ($result == -1) {
             return array("passed" => false, "message" => _("The entered reference is already in use."));
             api_error(500, 'Could Not Save to Database');
             return;
-      }
-    $feeback_response = sprintf(_("Invoice # %d has been entered."), key($cart->trans_no));
+     }
+   // $feeback_response = sprintf(_("Invoice # %d has been entered."), key($cart->trans_no));
 
-    api_success_response(_("Ok"));
+   //api_success_response(_("Ok"));
     $app->error();
     
-    //api_success_response(json_encode($cart));
+    api_success_response(json_encode(key($cart->trans_no)));
+	*/
 
 }
 
