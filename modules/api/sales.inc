@@ -76,6 +76,91 @@ include_once($path_to_root . "/admin/db/attachments_db.inc");
 	api_success_response(json_encode($ret));
 
 }*/
+function salesinvoice_add() {
+
+    $app    = \Slim\Slim::getInstance('SASYS');
+    $req    = $app->request();
+    $info    = $req->post();
+    //$info = array(1,2,3);    
+
+    $cart        = null;
+    $cart        = new Cart($info['trans_type'], 0);
+
+    $cart->reference    = $info['ref'];
+    $cart->Comments        = $info['comments'];
+    $cart->document_date    = Today() ;//$info['order_date'];
+    if (isset($info['payment']) && ($cart->payment != $info['payment'])) {
+        $cart->payment        = $info['payment'];
+        $cart->payment_terms    = get_payment_terms($info['payment']);
+        $newpayment        = true;
+    }
+
+    if ($cart->payment_terms['cash_sale']) {
+        if ($newpayment) {
+            $cart->due_date        = $cart->document_date;
+            $cart->phone        = $cart->cust_ref = $cart->delivery_address = '';
+            $cart->ship_via        = 0;
+            $cart->deliver_to    = '';
+        }
+    } else {
+        $cart->due_date            = Today() ;//$info['delivery_date'];
+        $cart->cust_ref            = $info['cust_ref'];
+        $cart->deliver_to        = $info['deliver_to'];
+        $cart->delivery_address        = $info['delivery_address'];
+        $cart->phone            = $info['phone'];
+        $cart->ship_via            = $info['ship_via'];
+    }
+
+    $cart->Location        = $info['location'];
+    $cart->freight_cost    = input_num('freight_cost');
+
+    if (isset($info['email'])) {
+        $cart->email = $info['email'];
+    }else {
+        $cart->email = '';
+    }
+
+    $cart->customer_id    = $info['customer_id'];
+    $cart->Branch        = $info['branch_id'];
+    $cart->sales_type    = $info['sales_type'];
+    $cart->salesman        = $info['salesman'];
+
+    $cart->dimension_id    = $info['dimension_id'];
+    $cart->dimension2_id    = $info['dimension2_id'];
+
+    $customer_error = get_customer_details_to_order($cart, $info['customer_id'], $info['branch_id']);
+    
+    foreach($info['items'] as $item) {
+        add_to_order($cart, $item['stock_id'], $item['qty'], $item['price'], $item['discount']/100, $item['description']);
+    
+    }
+    
+    $can_process = can_process($info, $cart);
+
+    if ($can_process['passed'] == false) {
+        trigger_error(var_export($can_process, true));
+        api_error(412, $can_process['message']);
+        return;
+    }
+
+    
+    $result = $cart->writeTx(1);
+    
+    
+
+    if ($result == -1) {
+            return array("passed" => false, "message" => _("The entered reference is already in use."));
+            api_error(500, 'Could Not Save to Database');
+            return;
+      }
+    $feeback_response = sprintf(_("Invoice # %d has been entered."), key($cart->trans_no));
+
+    api_success_response(_("Ok"));
+    $app->error();
+    
+    //api_success_response(json_encode($cart));
+
+}
 
 function sales_all($trans_type, $from = null) {
 	//echo "sales add function"; 

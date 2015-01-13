@@ -633,6 +633,12 @@ $rest->get('/getsalesbylocation/:trans_type/:location', function($trans_type, $l
 		sales_by_location($trans_type, $location, $from);
 	}
 });
+// Insert Sales invoice
+$rest->post('/salesinvoice/', function() use ($rest){
+    include_once (API_ROOT . "/sales.inc");
+    salesinvoice_add();
+
+});
 // ------------------------------- Sales Order Entry -------------------------------
 
 // Init API
