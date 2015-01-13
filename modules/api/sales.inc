@@ -198,39 +198,43 @@ function sales_all($trans_type, $from = null) {
 
 function sales_get($trans_no, $trans_type) {
 	try {
-		$cart											= null;
-		$cart											= new Cart($trans_type, $trans_no);
-		$info['ref']							= $cart->reference;
-		$info['comments']					= $cart->Comments;
-		$info['order_date']				= $cart->document_date;
-		$info['payment']					= $cart->payment;
+		$cart				= null;
+		$cart				= new Cart($trans_type, $trans_no);
+		$info['ref']			= $cart->reference;
+		$info['comments']		= $cart->Comments;
+		$info['order_date']		= $cart->document_date;
+		$info['payment']		= $cart->payment;
 		$info['payment_terms']		= $cart->payment_terms;
-		$info['due_date']					= $cart->due_date;
-		$info['phone']						= $cart->phone;
-		$info['cust_ref']					= $cart->cust_ref;
+		$info['due_date']		= $cart->due_date;
+		$info['phone']			= $cart->phone;
+		$info['cust_ref']		= $cart->cust_ref;
 		$info['delivery_address']	= $cart->delivery_address;
-		$info['ship_via']					= $cart->ship_via;
-		$info['deliver_to']				= $cart->deliver_to;
+		$info['ship_via']		= $cart->ship_via;
+		$info['deliver_to']		= $cart->deliver_to;
 		$info['delivery_date']		= $cart->due_date;
-		$info['location']					= $cart->Location;
-		$info['freight_cost']			= $cart->freight_cost;
-		$info['email']						= $cart->email;
-		$info['customer_id']			= $cart->customer_id;
-		$info['branch_id']				= $cart->Branch;
-		$info['sales_type']				= $cart->sales_type;
-		$info['dimension_id']			= $cart->dimension_id;
+		$info['location']		= $cart->Location;
+		$info['freight_cost']		= $cart->freight_cost;
+		$info['email']			= $cart->email;
+		$info['customer_id']		= $cart->customer_id;
+		$info['branch_id']		= $cart->Branch;
+		$info['sales_type']		= $cart->sales_type;
+		$info['dimension_id']		= $cart->dimension_id;
 		$info['dimension2_id']		= $cart->dimension2_id;
+		$info['discount']		= $cart->cash_discount;
+		$info['order_no']		= $cart->order_no;
 
 	 	$item_index = 0;
+		$info['total_items'] = 0;
 		foreach($cart->line_items as $item) {
-	 		$info['line_items'][$item_index]['id']					= $item->id;
-	 		$info['line_items'][$item_index]['stock_id']		= $item->stock_id;
-	 		$info['line_items'][$item_index]['qty']					= $item->quantity;
-	 		$info['line_items'][$item_index]['units']				= $item->units;
-	 		$info['line_items'][$item_index]['price']				= $item->price;
-	 		$info['line_items'][$item_index]['discount']		= $item->discount_percent;
+	 		$info['line_items'][$item_index]['id']		= $item->id;
+	 		$info['line_items'][$item_index]['stock_id']	= $item->stock_id;
+	 		$info['line_items'][$item_index]['qty']		= $item->quantity;
+	 		$info['line_items'][$item_index]['units']	= $item->units;
+	 		$info['line_items'][$item_index]['price']	= $item->price;
+	 		$info['line_items'][$item_index]['discount']	= $item->discount_percent;
 	 		$info['line_items'][$item_index]['description']	= $item->item_description;
 	 		$item_index++;
+			$info['total_items'] += $item->quantity;
 		}
 
 		$sub_total					= $cart->get_items_total() + $cart->freight_cost;
