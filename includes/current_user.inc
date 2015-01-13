@@ -124,7 +124,7 @@ class current_user
         	    $this->prefs = new user_prefs($myrow);
         	    $this->user = @$myrow["id"];
                 $this->email = @$myrow["email"];
-		$this->loc_code = $myrow["loc_code"];
+		$this->loc_code = 'DEF';//static
 
 		    	update_user_visitdate($this->username);
 		    	$this->logged = true;

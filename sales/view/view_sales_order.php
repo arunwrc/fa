@@ -75,7 +75,12 @@ label_cells(_("Order Currency"), $_SESSION['View']->customer_currency, "class='t
 label_cells(_("Deliver From Location"), $_SESSION['View']->location_name, "class='tableheader2'");
 end_row();
 
-label_row(_("Payment Terms"), $_SESSION['View']->payment_terms['terms'], "class='tableheader2'", "colspan=3");
+start_row();
+label_cells(_("Payment Terms"), $_SESSION['View']->payment_terms['terms'], "class='tableheader2'");
+label_cells(_("Sales Person"), $_SESSION['View']->salesman_name, "class='tableheader2'");
+end_row();
+
+//label_row(_("Payment Terms"), $_SESSION['View']->payment_terms['terms'], "class='tableheader2'", "colspan=3");
 label_row(_("Delivery Address"), nl2br($_SESSION['View']->delivery_address),
 	"class='tableheader2'", "colspan=3");
 label_row(_("Reference"), $_SESSION['View']->reference, "class='tableheader2'", "colspan=3");

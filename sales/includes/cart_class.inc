@@ -53,6 +53,7 @@ class cart
 	var $reference;
 	var $Comments;
 	var $Location;
+	
 	var $location_name;
 	var $order_no; 		// the original order number
 
@@ -90,6 +91,9 @@ class cart
 		$this->dimension_id = 0;
 		$this->dimension2_id = 0;
 		$this->pos = get_sales_point(user_pos());
+		//set location
+		$this->Location = $_SESSION['wa_current_user']->loc_code;
+		
 		$this->read($type, $trans_no, $prep_child);
 		$this->cart_id = uniqid('');
 	}
@@ -120,12 +124,13 @@ class cart
 	//
 	function prepare_child()
 	{
-		global $Refs;
+		global $Refs,$LocRefs;
 
 		$type = get_child_type($this->trans_type);
 
 		$this->trans_type = $type;
-		$this->reference = $Refs->get_next($this->trans_type);
+		//$this->reference = $Refs->get_next($this->trans_type);
+		$this->reference = $LocRefs->get_next($this->trans_type,$this->Location);
 		if ($type == ST_CUSTCREDIT)
 		    $this->src_date = $this->document_date;
 
@@ -190,7 +195,9 @@ class cart
 	//
 	function read($type, $trans_no=0, $prep_child=false) {
 
-		global $SysPrefs, $Refs;
+		global $SysPrefs, $Refs, $LocRefs;
+
+		
 
 		if (!is_array($trans_no)) $trans_no = array($trans_no);
 
@@ -227,7 +234,12 @@ class cart
 				$this->document_date = new_doc_date();
 				if (!is_date_in_fiscalyear($this->document_date))
 					$this->document_date = end_fiscalyear();
-				$this->reference = $Refs->get_next($this->trans_type);
+
+				//location wise reference
+				//$this->reference = $Refs->get_next($this->trans_type);
+				$this->reference = $LocRefs->get_next($this->trans_type,$this->Location);
+
+
 				if ($type != ST_SALESORDER && $type != ST_SALESQUOTE) // Added 2.1 Joe Hunt 2008-11-12
 				{
 					$dim = get_company_pref('use_dimension');
@@ -264,7 +276,62 @@ class cart
 	// Makes parent documents for direct delivery/invoice by recurent call.
 	// $policy - 0 or 1:  writeoff/return for IV, back order/cancel for DN
 	function write($policy=0) { 
-		begin_transaction(); // prevents partial database changes in case of direct delivery/invoice
+		//begin_transaction(); // prevents partial database changes in case of direct delivery/invoice
+		//if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_reference($this->reference, $this->trans_type))
+		if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_loc_reference($this->reference, $this->trans_type,$this->Location))
+		{
+			commit_transaction();
+			return -1;
+		}
+		if (count($this->src_docs) == 0 && ($this->trans_type == ST_SALESINVOICE || $this->trans_type == ST_CUSTDELIVERY)) {
+			// this is direct document - first add parent
+			$ref = $this->reference;
+			$date = $this->document_date;
+			$due_date = $this->due_date;
+			$dimension_id = $this->dimension_id;
+			$dimension2_id = $this->dimension2_id;
+			$this->trans_type = get_parent_type($this->trans_type);
+
+			$this->reference = 'auto'; 
+			$trans_no = $this->write(1); 
+
+			// re-read parent document converting it to child
+			$this->read($this->trans_type, $trans_no, true); 
+			$this->document_date = $date;
+			$this->reference = $ref;
+			$this->due_date = $due_date;
+			$this->dimension_id = $dimension_id;
+			$this->dimension2_id = $dimension2_id;
+		}
+		$this->reference = @html_entity_decode($this->reference, ENT_QUOTES);
+		$this->Comments = @html_entity_decode($this->Comments, ENT_QUOTES);
+		foreach($this->line_items as $lineno => $line) {
+			$this->line_items[$lineno]->stock_id = @html_entity_decode($line->stock_id, ENT_QUOTES);
+			$this->line_items[$lineno]->item_description = @html_entity_decode($line->item_description, ENT_QUOTES);
+		}
+		switch($this->trans_type) {
+			case ST_SALESINVOICE:
+				$ret = write_sales_invoice($this); break;
+			case ST_CUSTCREDIT:
+				$ret = write_credit_note($this, $policy); break;
+			case ST_CUSTDELIVERY:
+				$ret = write_sales_delivery($this, $policy); break;
+			case ST_SALESORDER:
+			case ST_SALESQUOTE:
+				if ($this->trans_no==0)	// new document
+					$ret = add_sales_order($this);
+				else
+					$ret = update_sales_order($this);
+		}
+
+		commit_transaction();
+
+		return $ret;
+	}
+
+	//via api
+	function writeTx($policy=0) { 
+		//begin_transaction(); // prevents partial database changes in case of direct delivery/invoice
 		if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_reference($this->reference, $this->trans_type))
 		{
 			commit_transaction();
@@ -280,7 +347,7 @@ class cart
 			$this->trans_type = get_parent_type($this->trans_type);
 
 			$this->reference = 'auto'; 
-			$trans_no = $this->write(1); 
+			$trans_no = $this->writeTx(1); 
 
 			// re-read parent document converting it to child
 			$this->read($this->trans_type, $trans_no, true); 
@@ -354,6 +421,19 @@ class cart
 	{
 		$this->Location = $id;
 		$this->location_name = $name;
+	}
+
+	function get_loc_ref($loc)
+	{
+		global $LocRefs;
+		return $LocRefs->get_next($this->trans_type,$loc);
+		
+	}
+
+	function set_salesman($id, $name)
+	{
+		$this->salesman = $id;
+		$this->salesman_name = $name;
 	}
 
 	function set_delivery($shipper, $destination, $address, $freight_cost=null)
