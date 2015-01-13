@@ -183,8 +183,10 @@ $opts = array(		// default options
 	$edit = false;
 //if($name=='stock_id')	display_notification('<pre>'.print_r($_POST, true).'</pre>');
 //if($name=='curr_default') display_notification($opts['search_submit']);
+
 	if($result = db_query($sql)) {
 		while ($contact_row = db_fetch($result)) {
+
 			$value = $contact_row[0];
 			$descr = $opts['format']==null ?  $contact_row[1] :
 				call_user_func($opts['format'], $contact_row);
@@ -239,6 +241,8 @@ $opts = array(		// default options
 	}
 	
 	$_POST[$name] = $multi ? $selected_id : $selected_id[0];
+
+
 
 	$selector = "<select autocomplete='off' ".($multi ? "multiple" : '')
 		. ($opts['height']!==false ? ' size="'.$opts['height'].'"' : '')
@@ -1130,6 +1134,51 @@ function sales_persons_list_row($label, $name, $selected_id=null, $spec_opt=fals
 	sales_persons_list_cells(null, $name, $selected_id, $spec_opt);
 	echo "</tr>\n";
 }
+//------------------------------------------------------------------------------------------------
+
+function warehouse_salesman_list($loc_code, $name, $selected_id=null,
+	$spec_option = true, $submit_on_change=false)
+{
+	global $all_items;
+
+	$sql = "SELECT salesman_code, salesman_name, inactive FROM ".TB_PREF."salesman
+		WHERE loc_code = " . db_escape($loc_code)." ";
+
+
+	$ret = combo_input($name, $selected_id, $sql, 'salesman_code', 'salesman_name',
+	array(
+		'order' => array('salesman_name'),
+		'spec_option' => $spec_option === true ? _('All Salesmen') : $spec_option,
+		'spec_id' => $all_items,
+		'select_submit'=> $submit_on_change,
+		'sel_hint' => _('Select salesman ')
+	) );
+
+		
+	return $ret;
+}
+//------------------------------------------------------------------------------------------------
+
+function warehouse_salesman_list_cells($label,$loc_code, $name, $selected_id=null, 
+	$all_option = true, $submit_on_change=false)
+{
+	if ($label != null)
+		echo "<td>$label</td>\n";
+	echo "<td>";
+	echo warehouse_salesman_list($loc_code, $name, $selected_id, $all_option, $submit_on_change);
+	echo "</td>\n";
+}
+
+function warehouse_salesman_list_row($label, $loc_code, $name, $selected_id=null, 
+	$all_option = true, $submit_on_change=false)
+{
+	echo "<tr><td class='label'>$label</td>";
+	warehouse_salesman_list_cells(null, $loc_code, $name, $selected_id, 
+		$all_option, $submit_on_change);
+	echo "</tr>";
+}
+
+
 
 //------------------------------------------------------------------------------------
 

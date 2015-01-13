@@ -227,7 +227,10 @@ function copy_from_cart()
 	$_POST['dimension_id'] = $cart->dimension_id;
 	$_POST['dimension2_id'] = $cart->dimension2_id;
 	$_POST['cart_id'] = $cart->cart_id;
-	$_POST['ref'] = $cart->reference;
+	if($cart->trans_no == 0)
+		$_POST['ref'] = $cart->get_loc_ref($cart->Location);
+	else
+		$_POST['ref'] = $cart->reference;
 }
 //------------------------------------------------------------------------------
 
