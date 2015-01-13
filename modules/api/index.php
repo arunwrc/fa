@@ -336,6 +336,14 @@ $rest->get('/customers/:id', function($id) use ($rest){
 	customer_get($id);
 
 });
+
+// Get Customer and Branch General Info
+$rest->get('/customer_n_branch/:id/:trans_type', function($id,$trans_type) use ($rest){
+	include_once (API_ROOT . "/customers.inc");
+	customer_n_branch_get($id,$trans_type);
+
+});
+
 // All Customers
 $rest->get('/customers/', function() use ($rest){
 	global $req;
