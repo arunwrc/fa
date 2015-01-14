@@ -808,33 +808,34 @@ function salesinvoice_add() {
 function void_add()
 {
 
-$app = \Slim\Slim::getInstance('SASYS');
-$req = $app->request();
-$info = $req->post();
-//print_r($app); exit;
-// Validate Required Fields
-if(!isset($info['type'])){
-api_error(412, 'type  is required [type]');
-}
-if(!isset($info['id'])){
-api_error(412, 'id is required [id]');
-}
-if(!isset($info['memo_'])){
-api_error(412, 'memo_ is required [memo_]');
-}
+	$app = \Slim\Slim::getInstance('SASYS');
+	$req = $app->request();
+	$info = $req->post();
+	//print_r($app); exit;
+	// Validate Required Fields
+	if(!isset($info['type'])){
+	api_error(412, 'type  is required [type]');
+	}
+	if(!isset($info['id'])){
+	api_error(412, 'id is required [id]');
+	}
+	if(!isset($info['memo_'])){
+	api_error(412, 'memo_ is required [memo_]');
+	}
 
-//api_success_response(json_encode($info));
+	//api_success_response(json_encode($info));
 
-add_voided_entry($info['type'], $info['id'], Today(), $info['memo_']);
+	//add_voided_entry($info['type'], $info['id'], Today(), $info['memo_']);
+	void_transaction($info['type'], $info['id'], Today(), $info['memo_']);
 
-$id = db_insert_id();
-$sup = get_void($id);
+	$id = db_insert_id();
+	$sup = get_void($id);
 
-if($sup != null){
-api_create_response(json_encode($info));
-}else {
-api_error(500, 'Could Not Save to Database');
-}
+	if($sup != null){
+	api_create_response(json_encode($info));
+	}else {
+	api_error(500, 'Could Not Save to Database');
+	}
 
 }
 /////////////////

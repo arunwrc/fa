@@ -666,6 +666,20 @@ $rest->post('/salesinvoice/', function() use ($rest){
 
 });
 
+
+// ------------------------------- Cancel A Sale -------------------------------
+// Void Sale
+
+
+
+$rest->post('/voidsale/', function() use ($rest){
+include_once (API_ROOT . "/sales.inc");
+void_add();
+
+});
+
+// ------------------------------- Cancel A Sale -------------------------------
+
 // Init API
 $rest->run();
 
