@@ -40,7 +40,7 @@ function salesman_add()
 
 	$app = \Slim\Slim::getInstance('SASYS');
 	$req = $app->request();
-	$info = $req->post();
+	$info = $req->post();//api_success_response(json_encode($info));return;
 	//print_r($app); exit;
 	// Validate Required Fields
 	if(!isset($info['salesman_name'])){
@@ -103,6 +103,8 @@ function salesman_edit($id){
 	$app = \Slim\Slim::getInstance('SASYS');
 	$req = $app->request();
 	$info = $req->post();
+	
+
 
 	$sman = get_salesman($id);
 
@@ -136,17 +138,11 @@ function salesman_edit($id){
 	}
 	
 
-	update_salesman($id, 
-			$info['salesman_name'], 
-			$info['salesman_phone'], 
-			$info['salesman_fax'],
-			$info['salesman_email'], 
-			$info['provision'], 
-			$info['break_pt'], 
-			$info['provision2'],
-			$info['loc_code']);
+	$update = update_salesman($id, $info['salesman_name'], $info['salesman_phone'], $info['salesman_fax'], $info['salesman_email'], $info['provision'], $info['break_pt'], $info['provision2'],$info['loc_code']);
 
-	api_success_response("Salesman has been updated");
+api_success_response(json_encode($update));return;
+		
+	//api_success_response("Salesman has been updated");
 
 }
 

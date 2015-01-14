@@ -444,17 +444,22 @@ $rest->get('/suppliers/:id/contacts/', function($id) use ($rest){
 // SalesMan
 
 // Add SalesMan
-$rest->post('/salesman/', function() use ($rest){
+/*$rest->post('/salesman/', function() use ($rest){
 	
 	include_once (API_ROOT . "/salesman.inc");
 	salesman_add();
 
-});
+});*/
 
 // Edit SalesMan
-$rest->put('/salesman/:id', function($id) use ($rest){
+
+$rest->post('/salesman/', function($id) use ($rest){
 	include_once (API_ROOT . "/salesman.inc");
-	salesman_edit($id);
+
+	if($id > 0)
+		salesman_edit($id);
+	else
+		salesman_add();
 
 });
 

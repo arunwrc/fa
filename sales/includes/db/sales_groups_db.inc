@@ -121,6 +121,7 @@ function update_salesman($selected_id, $salesman_name, $salesman_phone, $salesma
 		loc_code=".db_escape($loc_code).",
 		provision2=".$provision2."
 		WHERE salesman_code = ".db_escape($selected_id);
+	//return $sql;
    	db_query($sql,"The update of the sales person failed");
 }
 
