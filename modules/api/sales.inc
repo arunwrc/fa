@@ -593,60 +593,115 @@ function sales_by_location($trans_type, $location, $from = null) {
 	$info = array();
 	$sale_index = 0;
 
-	if ($trans_type == ST_SALESORDER || $trans_type == ST_SALESQUOTE || $trans_type == ST_CUSTDELIVERY) {
-		$sql = "SELECT order_no, trans_type FROM ".TB_PREF."sales_orders WHERE trans_type=".db_escape($trans_type)." AND from_stk_loc=".db_escape($location)." LIMIT ".$from.", ".RESULTS_PER_PAGE;
-		$query = db_query($sql, "error");
+	if ($trans_type == ST_SALESINVOICE || $trans_type == ST_CUSTCREDIT) {
+	$sql = "SELECT trans_no, type FROM ".TB_PREF."debtor_trans WHERE type=".db_escape($trans_type)." AND loc_code=".db_escape($location)." LIMIT ".$from.", ".RESULTS_PER_PAGE;
+	$query = db_query($sql, "error");
 
-		while($sale = db_fetch($query, "error")) {
-			try {
-				$cart																		= null;
-				$cart																		= new Cart($sale['trans_type'], $sale['order_no']);
-				$info[$sale_index]['ref']								= $cart->reference;
-				$info[$sale_index]['comments']					= $cart->Comments;
-				$info[$sale_index]['order_date']				= $cart->document_date;
-				$info[$sale_index]['payment']						= $cart->payment;
-				$info[$sale_index]['payment_terms']			= $cart->payment_terms;
-				$info[$sale_index]['due_date']					= $cart->due_date;
-				$info[$sale_index]['phone']							= $cart->phone;
-				$info[$sale_index]['cust_ref']					= $cart->cust_ref;
-				$info[$sale_index]['delivery_address']	= $cart->delivery_address;
-				$info[$sale_index]['ship_via']					= $cart->ship_via;
-				$info[$sale_index]['deliver_to']				= $cart->deliver_to;
-				$info[$sale_index]['delivery_date']			= $cart->due_date;
-				$info[$sale_index]['location']					= $cart->Location;
-				$info[$sale_index]['freight_cost']			= $cart->freight_cost;
-				$info[$sale_index]['email']							= $cart->email;
-				$info[$sale_index]['customer_id']				= $cart->customer_id;
-				$info[$sale_index]['branch_id']					= $cart->Branch;
-				$info[$sale_index]['sales_type']				= $cart->sales_type;
-				$info[$sale_index]['dimension_id']			= $cart->dimension_id;
-				$info[$sale_index]['dimension2_id']			= $cart->dimension2_id;
+	while($sale = db_fetch($query, "error")) {
+	try {
+	$trans	= get_customer_trans($sale['trans_no'], $sale['type']);
+	$trans_details	= get_customer_trans_details($sale['type'], $trans['trans_no']);
 
-			 	$item_index = 0;
 
-				foreach($cart->line_items as $item) {
-					$info[$sale_index]['line_items'][$item_index]['id']						= $item->id;
-					$info[$sale_index]['line_items'][$item_index]['stock_id']			= $item->stock_id;
-					$info[$sale_index]['line_items'][$item_index]['qty']					= $item->quantity;
-					$info[$sale_index]['line_items'][$item_index]['units']				= $item->units;
-					$info[$sale_index]['line_items'][$item_index]['price']				= $item->price;
-					$info[$sale_index]['line_items'][$item_index]['discount']			= $item->discount_percent;
-					$info[$sale_index]['line_items'][$item_index]['description']	= $item->item_description;
-			 		$item_index++;
-				}
+	$info[$sale_index]['location']	=  $location;
+	$info[$sale_index]['trans_no']	   	= $trans['trans_no'];
+	$info[$sale_index]['type']	= $trans['type'];
+	$info[$sale_index]['version']	= $trans['version'];
+	$info[$sale_index]['debtor_no']	= $trans['debtor_no'];
+	$info[$sale_index]['branch_code']	= $trans['branch_code'];
+	$info[$sale_index]['tran_date']	= $trans['tran_date'];
+	$info[$sale_index]['due_date']	= $trans['due_date'];
+	$info[$sale_index]['reference']	= $trans['reference'];
+	$info[$sale_index]['tpe']	= $trans['tpe'];
+	$info[$sale_index]['order_']	= $trans['order_'];
+	$info[$sale_index]['ov_amount']	= $trans['ov_amount'];
+	$info[$sale_index]['ov_gst']	= $trans['ov_gst'];
+	$info[$sale_index]['ov_freight']	= $trans['ov_freight'];
+	$info[$sale_index]['ov_freight_tax']	= $trans['ov_freight_tax'];
+	$info[$sale_index]['ov_discount']	= $trans['ov_discount'];
+	$info[$sale_index]['ov_discount']	= $trans['Total'];
+	$info[$sale_index]['alloc']	= $trans['alloc'];
+	$info[$sale_index]['rate']	= $trans['rate'];
+	$info[$sale_index]['ship_via']	= $trans['ship_via'];
+	$info[$sale_index]['dimension_id']	= $trans['dimension_id'];
+	$info[$sale_index]['dimension2_id']	= $trans['dimension2_id'];
+	$info[$sale_index]['payment_terms']	= $trans['payment_terms'];
+	$info[$sale_index]['digital']	= $trans['digital'];
 
-				$sub_total					= $cart->get_items_total() + $cart->freight_cost;
-				$display_sub_total	= price_format($sub_total);
-				$display_total			= $cart->get_trans_total();
+	$item_index = 0;
 
-				$info[$sale_index]['sub_total']			= $sub_total;
-				$info[$sale_index]['display_total']	= $display_total;
-			} catch (Exception $e) {
-				//api_error(404, $e->getMessage());
-			}
+	if (db_num_rows($trans_details) > 0) {
+	while ($trans_item = db_fetch($trans_details)) {
+	$info[$sale_index]['line_items'][$item_index]['id']	= $trans_item['id'];
+	$info[$sale_index]['line_items'][$item_index]['stock_id']	= $trans_item['stock_id'];
+	$info[$sale_index]['line_items'][$item_index]['qty']	= $trans_item['quantity'];
+	$info[$sale_index]['line_items'][$item_index]['units']	= $trans_item['units'];
+	$info[$sale_index]['line_items'][$item_index]['price']	= $trans_item['unit_price'];
+	$info[$sale_index]['line_items'][$item_index]['discount']	= $trans_item['discount_percent'];
+	$info[$sale_index]['line_items'][$item_index]['description']	= $trans_item['StockDescription'];
+	$item_index++;
+	}
+	}
+	} catch (Exception $e) {
+	//api_error(404, $e->getMessage());
+	}
 
-			$sale_index++;
-		}
+	$sale_index++;
+	}
+	} else if ($trans_type == ST_SALESORDER || $trans_type == ST_SALESQUOTE || $trans_type == ST_CUSTDELIVERY) {
+	$sql = "SELECT order_no, trans_type FROM ".TB_PREF."sales_orders WHERE trans_type=".db_escape($trans_type)." AND from_stk_loc=".db_escape($location)." LIMIT ".$from.", ".RESULTS_PER_PAGE;
+	$query = db_query($sql, "error");
+
+	while($sale = db_fetch($query, "error")) {
+	try {
+	$cart	= null;
+	$cart	= new Cart($sale['trans_type'], $sale['order_no']);
+	$info[$sale_index]['ref']	= $cart->reference;
+	$info[$sale_index]['comments']	= $cart->Comments;
+	$info[$sale_index]['order_date']	= $cart->document_date;
+	$info[$sale_index]['payment']	= $cart->payment;
+	$info[$sale_index]['payment_terms']	= $cart->payment_terms;
+	$info[$sale_index]['due_date']	= $cart->due_date;
+	$info[$sale_index]['phone']	= $cart->phone;
+	$info[$sale_index]['cust_ref']	= $cart->cust_ref;
+	$info[$sale_index]['delivery_address']	= $cart->delivery_address;
+	$info[$sale_index]['ship_via']	= $cart->ship_via;
+	$info[$sale_index]['deliver_to']	= $cart->deliver_to;
+	$info[$sale_index]['delivery_date']	= $cart->due_date;
+	$info[$sale_index]['location']	= $cart->Location;
+	$info[$sale_index]['freight_cost']	= $cart->freight_cost;
+	$info[$sale_index]['email']	= $cart->email;
+	$info[$sale_index]['customer_id']	= $cart->customer_id;
+	$info[$sale_index]['branch_id']	= $cart->Branch;
+	$info[$sale_index]['sales_type']	= $cart->sales_type;
+	$info[$sale_index]['dimension_id']	= $cart->dimension_id;
+	$info[$sale_index]['dimension2_id']	= $cart->dimension2_id;
+
+	$item_index = 0;
+
+	foreach($cart->line_items as $item) {
+	$info[$sale_index]['line_items'][$item_index]['id']	= $item->id;
+	$info[$sale_index]['line_items'][$item_index]['stock_id']	= $item->stock_id;
+	$info[$sale_index]['line_items'][$item_index]['qty']	= $item->quantity;
+	$info[$sale_index]['line_items'][$item_index]['units']	= $item->units;
+	$info[$sale_index]['line_items'][$item_index]['price']	= $item->price;
+	$info[$sale_index]['line_items'][$item_index]['discount']	= $item->discount_percent;
+	$info[$sale_index]['line_items'][$item_index]['description']	= $item->item_description;
+	$item_index++;
+	}
+
+	$sub_total	= $cart->get_items_total() + $cart->freight_cost;
+	$display_sub_total	= price_format($sub_total);
+	$display_total	= $cart->get_trans_total();
+
+	$info[$sale_index]['sub_total']	= $sub_total;
+	$info[$sale_index]['display_total']	= $display_total;
+	} catch (Exception $e) {
+	//api_error(404, $e->getMessage());
+	}
+
+	$sale_index++;
+	}
 	}
 
 	api_success_response(json_encode($info));
@@ -747,5 +802,42 @@ function salesinvoice_add() {
 	*/
 
 }
+
+
+//////////////////
+function void_add()
+{
+
+$app = \Slim\Slim::getInstance('SASYS');
+$req = $app->request();
+$info = $req->post();
+//print_r($app); exit;
+// Validate Required Fields
+if(!isset($info['type'])){
+api_error(412, 'type  is required [type]');
+}
+if(!isset($info['id'])){
+api_error(412, 'id is required [id]');
+}
+if(!isset($info['memo_'])){
+api_error(412, 'memo_ is required [memo_]');
+}
+
+//api_success_response(json_encode($info));
+
+add_voided_entry($info['type'], $info['id'], Today(), $info['memo_']);
+
+$id = db_insert_id();
+$sup = get_void($id);
+
+if($sup != null){
+api_create_response(json_encode($info));
+}else {
+api_error(500, 'Could Not Save to Database');
+}
+
+}
+/////////////////
+ᐧ
 
 ?>
