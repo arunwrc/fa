@@ -237,12 +237,18 @@ function sales_get($trans_no, $trans_type) {
 			$info['total_items'] += $item->quantity;
 		}
 
-		$sub_total					= $cart->get_items_total() + $cart->freight_cost;
+		$sub_total		= $cart->get_items_total() + $cart->freight_cost;
 		$display_sub_total	= price_format($sub_total);
-		$display_total			= $cart->get_trans_total();
+		$display_total		= $cart->get_trans_total();
 
 		$info['sub_total']			= $sub_total;
 		$info['display_total']	= $display_total;
+
+
+		$info['order'] = get_sales_order_header($cart->order_no, ST_SALESORDER);
+
+		
+
 	} catch (Exception $e) {
 		api_error(404, $e->getMessage());
 	}
@@ -651,7 +657,7 @@ function salesinvoice_add() {
     $app    = \Slim\Slim::getInstance('SASYS');
     $req    = $app->request();
     $info    = $req->post();
-    //$info = array(1,2,3);  
+    
 	
 
     $cart        = null;

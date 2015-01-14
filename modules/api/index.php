@@ -57,6 +57,15 @@ $req	= $rest->request();
 define("RESULTS_PER_PAGE", 10);
 
 // API Routes
+//-----------------------------ADMIN---------------------------------
+$rest->get('/company/', function() use ($rest){
+	include_once (API_ROOT . "/admin.inc");
+	company_get();
+});
+
+
+
+
 // ------------------------------- Items -------------------------------
 // Get Items
 $rest->get('/inventory/', function() use ($rest){
@@ -439,6 +448,13 @@ $rest->post('/salesman/', function() use ($rest){
 	
 	include_once (API_ROOT . "/salesman.inc");
 	salesman_add();
+
+});
+
+// Edit SalesMan
+$rest->put('/salesman/:id', function($id) use ($rest){
+	include_once (API_ROOT . "/salesman.inc");
+	salesman_edit($id);
 
 });
 

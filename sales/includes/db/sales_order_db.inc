@@ -224,6 +224,7 @@ function get_sales_order_header($order_no, $trans_type)
 	  ."cust.address, "
 	  ."loc.location_name, "
 	  ."sman.salesman_name, "
+	  ."sman.salesman_phone, "
 	  ."cust.discount, "
 	  ."stype.sales_type, "
 	  ."stype.id AS sales_type_id, "
