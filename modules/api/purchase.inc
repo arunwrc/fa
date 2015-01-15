@@ -27,4 +27,24 @@ function purchase_all($filter, $from = null) {
 	api_success_response(json_encode($info));
 }
 
+
+function purchase_search() {
+
+	$app	= \Slim\Slim::getInstance('SASYS');
+	$req	= $app->request();
+	$data	= $req->post();
+
+
+	//$sql = get_sql_for_supplier_inquiry($data['filter'], '12/16/2014', '01/15/2015', $data['loc_code']);
+	$sql = get_sql_for_supplier_inquiry($data['filter'], '12/16/2014', '01/15/2015');
+
+	$query = db_query($sql, "error");
+
+	while($purchase = db_fetch($query, "error")) {
+		$info[] = $purchase;
+	}
+
+	api_success_response(json_encode($info));
+}
+
 ?>

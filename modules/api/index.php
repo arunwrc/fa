@@ -716,6 +716,17 @@ $rest->get('/purchase/:trans_type/', function($trans_type) use ($rest){
 	}
 });
 
+// All purchase
+$rest->post('/purchase/', function() use ($rest){
+	global $req;
+	include_once (API_ROOT . "/purchase.inc");
+
+	
+	purchase_search();
+	
+});
+
+
 // Init API
 $rest->run();
 

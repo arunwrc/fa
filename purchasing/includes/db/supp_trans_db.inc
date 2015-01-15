@@ -163,7 +163,7 @@ function post_void_supp_trans($type, $type_no)
 
 //----------------------------------------------------------------------------------------
 
-function get_sql_for_supplier_inquiry($filter, $after_date, $to_date, $supplier_id=ALL_TEXT,$loc_code ='DEF')
+function get_sql_for_supplier_inquiry($filter, $after_date, $to_date, $supplier_id=ALL_TEXT, $loc_code ='')
 {
     $date_after = date2sql($after_date);
     $date_to = date2sql($to_date);
