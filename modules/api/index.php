@@ -685,6 +685,26 @@ void_add();
 
 // ------------------------------- Cancel A Sale -------------------------------
 
+
+
+// ------------------------------- Purchase -------------------------------
+
+// All purchase
+$rest->get('/purchase/:trans_type/', function($trans_type) use ($rest){
+	global $req;
+	include_once (API_ROOT . "/purchase.inc");
+
+	$page	= $req->get("page");
+
+	if ($page == null) {
+		purchase_all($trans_type);
+	} else {
+		// If page = 1 the value will be 0, if page = 2 the value will be 1, ...
+		$from = --$page * RESULTS_PER_PAGE;
+		purchase_all($trans_type, $from);
+	}
+});
+
 // Init API
 $rest->run();
 
