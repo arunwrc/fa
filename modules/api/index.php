@@ -236,9 +236,20 @@ $rest->get('/movementtypes/', function() use ($rest){
 // Get Locations
 $rest->get('/locations/', function() use ($rest){
 	include_once (API_ROOT . "/inventory.inc");
+	
 	inventory_locations_all();
+});
+
+$rest->get('/locations/:loc_code', function($loc_code) use ($rest){
+	include_once (API_ROOT . "/inventory.inc");
+	
+	inventory_location($loc_code);
+	
 
 });
+
+
+
 
 // Add Location, added by Richard Vinke
 $rest->post('/locations/', function() use ($rest){

@@ -367,6 +367,15 @@ function inventory_locations_all()
 
 }
 
+function inventory_location($loc_code)
+{
+
+	$location =get_item_location($loc_code);
+	
+	api_success_response(json_encode($location));
+
+}
+
 function inventory_location_add()
 {	// Added by Richard Vinke
 	$app = \Slim\Slim::getInstance('SASYS');
