@@ -54,7 +54,7 @@ api_login();
 
 $req	= $rest->request();
 
-define("RESULTS_PER_PAGE", 10);
+define("RESULTS_PER_PAGE", 50);
 
 // API Routes
 //-----------------------------ADMIN---------------------------------

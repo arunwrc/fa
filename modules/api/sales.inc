@@ -594,7 +594,7 @@ function sales_by_location($trans_type, $location, $from = null) {
 	$sale_index = 0;
 
 	if ($trans_type == ST_SALESINVOICE || $trans_type == ST_CUSTCREDIT) {
-	$sql = "SELECT trans_no, type FROM ".TB_PREF."debtor_trans WHERE type=".db_escape($trans_type)." AND loc_code=".db_escape($location)." LIMIT ".$from.", ".RESULTS_PER_PAGE;
+	$sql = "SELECT trans_no, type FROM ".TB_PREF."debtor_trans WHERE type=".db_escape($trans_type)." AND loc_code=".db_escape($location)."ORDER BY trans_no DESC LIMIT ".$from.", ".RESULTS_PER_PAGE;
 	$query = db_query($sql, "error");
 
 	while($sale = db_fetch($query, "error")) {
