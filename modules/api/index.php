@@ -63,6 +63,12 @@ $rest->get('/company/', function() use ($rest){
 	company_get();
 });
 
+//-----------------------------ADMIN---------------------------------
+$rest->get('/admin/', function() use ($rest){
+	include_once (API_ROOT . "/admin.inc");
+	admin_get();
+});
+
 
 
 

@@ -17,6 +17,8 @@ include_once($path_to_root . "/includes/session.inc");
 include_once($path_to_root . "/purchasing/includes/purchasing_ui.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 
+
+
 if (!@$_GET['popup'])
 {
 	$js = "";

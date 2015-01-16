@@ -34,8 +34,24 @@ function purchase_search() {
 	$req	= $app->request();
 	$data	= $req->post();
 
+	if(isset($data['from_date']) && isset($data['to_date'])){
+		$todate = $data['to_date'];
+		$fromdate = $data['from_date'];
+	}else if(isset($data['from_date'])){
+		$fromdate = $data['from_date'];
+		$todate = add_days($fromdate, 30);
+		
+	}else if(isset($data['to_date'])){
+		$todate = $data['to_date'];
+		$fromdate = add_days($todate, -30);
+	}else{
+		$todate = Today();
+		$fromdate = add_days($todate, -30);
+	}
+	
 
-	$sql = get_sql_for_supplier_inquiry($data['filter'], '12/16/2014', '01/15/2016', ALL_TEXT,$data['loc_code']);
+
+	$sql = get_sql_for_supplier_inquiry($data['filter'], $fromdate, $todate, ALL_TEXT,$data['loc_code']);
 
 	$query = db_query($sql, "error");
 
