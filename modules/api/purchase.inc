@@ -35,8 +35,7 @@ function purchase_search() {
 	$data	= $req->post();
 
 
-	//$sql = get_sql_for_supplier_inquiry($data['filter'], '12/16/2014', '01/15/2015', $data['loc_code']);
-	$sql = get_sql_for_supplier_inquiry($data['filter'], '12/16/2014', '01/15/2015');
+	$sql = get_sql_for_supplier_inquiry($data['filter'], '12/16/2014', '01/15/2016', ALL_TEXT,$data['loc_code']);
 
 	$query = db_query($sql, "error");
 
