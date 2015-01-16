@@ -59,7 +59,15 @@ function inventory_by_stock_id($stock_id,$from = null) {
 	$info = array();
 
 	while($data = db_fetch($query, "error")) {
-		$info[] = array('stock_id' => $data['stock_id'], 'category_id' => $data['category_id'], 'tax_type_id' => $data['tax_type_id'], 'description' => $data['description'], 'long_description' => $data['long_description'], 'units' => $data['units'], 'mb_flag' => $data['mb_flag'], 'sales_account' => $data['sales_account'], 'cogs_account' => $data['cogs_account'], 'inventory_account' => $data['inventory_account'], 'sales_account' => $data['sales_account'], 'adjustment_account' => $data['adjustment_account'], 'actual_cost' => $data['actual_cost'], 'material_cost' => $data['material_cost'], 'labour_cost' => $data['labour_cost'], 'overhead_cost' => $data['overhead_cost'], 'inactive' => $data['inactive'],'no_sale' => $data['no_sale']);
+		
+		$price = get_stock_price_type_currency($data['stock_id'], RETAIL_SALE, 'INR');
+		if($price){
+			$sales_price = $price['price'];
+		}else{
+			$sales_price = 0;
+		}
+
+		$info[] = array('stock_id' => $data['stock_id'], 'category_id' => $data['category_id'], 'tax_type_id' => $data['tax_type_id'], 'description' => $data['description'], 'long_description' => $data['long_description'], 'units' => $data['units'], 'mb_flag' => $data['mb_flag'], 'sales_account' => $data['sales_account'], 'cogs_account' => $data['cogs_account'], 'inventory_account' => $data['inventory_account'], 'sales_account' => $data['sales_account'], 'adjustment_account' => $data['adjustment_account'], 'actual_cost' => $data['actual_cost'], 'material_cost' => $data['material_cost'], 'labour_cost' => $data['labour_cost'], 'overhead_cost' => $data['overhead_cost'], 'inactive' => $data['inactive'],'no_sale' => $data['no_sale'],'sales_price'=>$sales_price);
 	}
 
 	api_success_response(json_encode($info));
