@@ -187,4 +187,19 @@ function get_customer_by_ref($reference)
 	return db_fetch($result);
 }
 
+ /* getCustomerByName Starts */
+function get_customer_by_name($name)
+{
+       //$sql = "SELECT * FROM ".TB_PREF."debtors_master  WHERE name  LIKE '%".db_escape($name)."%'";
+       $sql = "SELECT debtor_no,name FROM ".TB_PREF."debtors_master WHERE `name` LIKE '%".$name."%'";
+
+       $result = db_query($sql, "could not get customer");
+
+       
+
+       return $result;
+}
+/* getCustomerByName Ends*/
+
+
 ?>

@@ -356,6 +356,16 @@ $rest->get('/taxgroups/', function() use ($rest){
 
 // ------------------------------- Customers -------------------------------
 // Customers
+
+
+
+// Get Customer By Name
+$rest->get('/customername/:name', function($name) use ($rest){
+include_once (API_ROOT . "/customers.inc");
+customer_by_name($name);
+
+});
+
 // Get Customer General Info
 $rest->get('/customers/:id', function($id) use ($rest){
 	include_once (API_ROOT . "/customers.inc");

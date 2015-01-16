@@ -393,4 +393,24 @@ function customer_n_branch_get($id,$trans_type){
 
 }
 
+/* get Customer By name*/
+function customer_by_name($name) //sales/includes/db/customers_db.inc
+{
+
+	$cust = get_customer_by_name($name);
+	$info = array();
+
+	while($data = db_fetch($cust)) {
+		array_push($info, $data['name']." (ID:".$data['debtor_no'].")");
+	}
+
+
+
+	 
+	api_success_response(json_encode($info));
+
+}
+/* get Customer By name*/
+
+
 ?>
