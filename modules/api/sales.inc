@@ -15,6 +15,7 @@ include_once($path_to_root . "/sales/includes/db/cust_trans_details_db.inc");
 include_once($path_to_root . "/sales/includes/sales_db.inc");
 include_once($path_to_root . "/sales/includes/db/sales_types_db.inc");
 include_once($path_to_root . "/admin/db/attachments_db.inc");
+//include_once($path_to_root . "/gl/includes/db/gl_db_trans.inc");
 // include_once($path_to_root . "/modules/timbrado/includes/db/comprobantes_db.php.inc");
 // include_once($path_to_root . "/modules/timbrado/includes/db/llavero_db.php.inc");
 // include_once($path_to_root . "/modules/timbrado/includes/generate/AutoFacturaCore.php.inc");
@@ -239,9 +240,11 @@ function sales_get($trans_no, $trans_type) {
 
 		$sub_total		= $cart->get_items_total() + $cart->freight_cost;
 		$display_sub_total	= price_format($sub_total);
-		$display_total		= $cart->get_trans_total();
+		//$display_total		= $cart->get_trans_total();
 
-		$info['sub_total']			= $sub_total;
+		$display_total = $cart->DisplayTotal;
+
+		$info['sub_total']	= $sub_total;
 		$info['display_total']	= $display_total;
 
 
@@ -843,11 +846,23 @@ function void_add()
 
 
 //get tax transaction for salesinvoice with trans id
-public function get_tax_items($trans_id)
+function get_tax_items($trans_id)
 {
 	$tax_items = get_trans_tax_details(ST_SALESINVOICE, $trans_id);
-
-	 api_success_response(json_encode($tax_items));
+	$info = array();
+	while($row = db_fetch($tax_items)){
+		$name = ($row['included_in_price'])?"Inclusive ":"";
+		$name.= $row['tax_type_name']." (".$row['rate']."%)";
+		
+		$info[] = array('name'	=> $name,
+				'rate'	=> $row['rate'],
+				'amount'=> number_format2($row['amount'],user_price_dec()),
+				'included'=> $row['included_in_price']
+		);
+		//$info[] = $row;
+	}
+	
+	api_success_response(json_encode($info));
 
 }
 

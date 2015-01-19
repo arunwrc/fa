@@ -73,6 +73,7 @@ class cart
 	var $payment_terms; // cached payment terms
 	var $credit;
 	var $ex_rate;
+	var $DisplayTotal = 1;
 
 	//-------------------------------------------------------------------------
 	//

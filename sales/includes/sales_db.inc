@@ -270,6 +270,9 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 	} else {
 		// read header data from first document
 		$myrow = get_customer_trans($trans_no[0],$doc_type);
+
+		$cart->DisplayTotal = $myrow['Total'];
+
 		if (count($trans_no)>1)
 			$cart->trans_no = get_customer_trans_version($doc_type, $trans_no);
 		else
@@ -290,6 +293,8 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 		$cart->dimension_id = $myrow['dimension_id']; // added 2.1 Joe Hunt 2008-11-12
 		$cart->dimension2_id = $myrow['dimension2_id'];
 		$cart->Comments = '';
+
+		
 		foreach ( $trans_no as $trans ) {
 			$cart->Comments .= get_comments_string($doc_type,$trans);
 		}
