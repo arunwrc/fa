@@ -763,6 +763,8 @@ function salesinvoice_add() {
     $cart->dimension2_id    = $info['dimension2_id'];
 
     $customer_error = get_customer_details_to_order($cart, $info['customer_id'], $info['branch_id']);
+
+	
     
     foreach($info['items'] as $item) {
         add_to_order($cart, $item['stock_id'], $item['qty'], $item['price'], $item['discount']/100, $item['description']);
@@ -838,6 +840,17 @@ function void_add()
 	}
 
 }
+
+
+//get tax transaction for salesinvoice with trans id
+public function get_tax_items($trans_id)
+{
+	$tax_items = get_trans_tax_details(ST_SALESINVOICE, $trans_id);
+
+	 api_success_response(json_encode($tax_items));
+
+}
+
 /////////////////
 ᐧ
 

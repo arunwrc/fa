@@ -713,6 +713,17 @@ void_add();
 // ------------------------------- Cancel A Sale -------------------------------
 
 
+//<<<<<<<<<<<<----------get tax transaction for salesinvoice-----------------------
+
+$rest->get('/taxtransaction/:trans_no',function($trans_no) use ($rest){
+	include_once(API_ROOT . "/sales.inc");
+	get_tax_items($trans_no);
+});
+
+//----------------------get tax transaction for salesinvoice -->>>>>>>>>>>>>>>>>>>>
+
+
+
 
 // ------------------------------- Purchase -------------------------------
 
