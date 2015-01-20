@@ -26,6 +26,15 @@ function category_all($from = null) {
 	api_success_response(json_encode($info));
 }
 
+function category_count()
+{
+	$sql = "SELECT COUNT(*) FROM ".TB_PREF."stock_category";
+	$query = db_query($sql, "error");
+	$data = db_fetch_row($query, "error");
+	
+	api_success_response(json_encode($data));
+}
+
 function category_get($id)
 {
 

@@ -508,4 +508,17 @@ function stock_adjustment_add($info)
 
 }
 
+function cat_product_count($cat_id=NULL)
+{
+	$sql = "SELECT COUNT(*) FROM ".TB_PREF."stock_master";
+	if($cat_id != NULL){
+		$sql .= " WHERE category_id = ".db_escape($cat_id);
+	}
+	$query = db_query($sql, "error");
+	$data = db_fetch_row($query, "error");
+	
+	api_success_response(json_encode($data));
+}
+
+
 ?>

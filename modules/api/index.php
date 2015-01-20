@@ -290,6 +290,15 @@ $rest->get('/category/', function() use ($rest){
 		category_all($from);
 	}
 });
+
+
+//Get category count
+$rest->get('/categorycount/', function() use ($rest){
+	include_once (API_ROOT . "/category.inc");
+	category_count();
+});
+
+
 // Get Specific Item Category
 $rest->get('/category/:id', function($id) use ($rest) {
 	include_once (API_ROOT . "/category.inc");
@@ -314,6 +323,8 @@ $rest->delete('/category/:id', function($id) use ($rest){
 	category_delete($id);
 
 });
+
+
 // ------------------------------- Item Categories -------------------------------
 
 // ------------------------------- Tax Types -------------------------------
@@ -596,6 +607,16 @@ $rest->put('/itemcosts/:id', function($id) use ($rest){
 	itemcosts_update($id);
 
 });
+
+//Get product count
+$rest->get('/catproductcount/:cat', function($cat) use ($rest){
+
+	include_once (API_ROOT . "/inventory.inc");
+	
+	cat_product_count($cat);
+	
+});
+
 // ------------------------------- Inventory Costs -------------------------------
 
 // ------------------------------- Assets -------------------------------
