@@ -226,6 +226,8 @@ function sales_get($trans_no, $trans_type) {
 
 	 	$item_index = 0;
 		$info['total_items'] = 0;
+		$info['total_discount'] = 0;
+		$info['total_without_discount'] = 0;
 		foreach($cart->line_items as $item) {
 	 		$info['line_items'][$item_index]['id']		= $item->id;
 	 		$info['line_items'][$item_index]['stock_id']	= $item->stock_id;
@@ -234,8 +236,11 @@ function sales_get($trans_no, $trans_type) {
 	 		$info['line_items'][$item_index]['price']	= $item->price;
 	 		$info['line_items'][$item_index]['discount']	= $item->discount_percent;
 	 		$info['line_items'][$item_index]['description']	= $item->item_description;
+			
 	 		$item_index++;
 			$info['total_items'] += $item->quantity;
+			$info['total_without_discount'] = ($item->quantity * $item->price);
+			$info['total_discount'] += ($item->quantity * $item->price)*$item->discount_percent;
 		}
 
 		$sub_total		= $cart->get_items_total() + $cart->freight_cost;
