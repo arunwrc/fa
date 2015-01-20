@@ -74,7 +74,7 @@ if (isset($_POST['submit']) && can_process())
 		'past_due_days', 'default_workorder_required', 'default_dim_required',
 		'default_delivery_required', 'grn_clearing_act',
 		'allow_negative_stock'=> 0, 'accumulate_shipping'=> 0,
-		'po_over_receive' => 0.0, 'po_over_charge' => 0.0, 'default_credit_limit'=>0.0
+		'po_over_receive' => 0.0, 'po_over_charge' => 0.0, 'default_credit_limit'=>0.0,'pos_customer'
 )));
 
 	display_notification(_("The general GL setup has been updated."));
@@ -131,6 +131,8 @@ $_POST['default_workorder_required'] = $myrow['default_workorder_required'];
 $_POST['default_dim_required'] = $myrow['default_dim_required'];
 $_POST['default_delivery_required'] = $myrow['default_delivery_required'];
 
+$_POST['pos_customer'] = $myrow['pos_customer'];
+
 //---------------
 
 
@@ -149,6 +151,8 @@ gl_all_accounts_list_row(_("Bank Charges Account:"), 'bank_charge_act', $_POST['
 //---------------
 
 table_section_title(_("Customers and Sales"));
+
+customer_list_row(_("POS Customer:"), 'pos_customer', $_POST['pos_customer'], 12, 12);
 
 text_row(_("Default Credit Limit:"), 'default_credit_limit', $_POST['default_credit_limit'], 12, 12);
 
